@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: portal_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: portal
+      POSTGRES_PASSWORD: portal_secret
+      POSTGRES_DB: portal_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portal -d portal_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./backend
+    container_name: portal_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://portal:portal_secret@db:5432/portal_db
+      JWT_SECRET: change_this_in_production
+      PORT: 3000
+      NODE_ENV: development # Entorno de desarrollo para ver errores detallados
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    # Sincroniza la base de datos automáticamente y luego levanta el servidor
+    command: >
+      sh -c "npx prisma db push && npm run dev"
+
+volumes:
+  postgres_data:

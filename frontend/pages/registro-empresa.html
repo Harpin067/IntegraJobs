@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro Empresa — IntegraJobs</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <div class="ij-auth-wrap">
+    <div class="ij-auth-card" style="max-width:540px">
+      <div class="ij-auth-brand"><a href="/">IntegraJobs</a></div>
+
+      <div class="ij-card">
+        <div class="ij-card-body">
+          <h5 class="ij-text-lg ij-font-bold ij-mb-1" style="text-align:center">Registro — Empresa</h5>
+          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Publica vacantes y recluta al mejor talento</p>
+
+          <div id="alert" class="ij-alert ij-alert-error ij-hidden ij-mb-3"></div>
+          <div id="success" class="ij-alert ij-alert-success ij-hidden ij-mb-3"></div>
+
+          <form id="registroForm">
+            <div class="ij-text-xs ij-font-semibold ij-text-muted ij-mb-2" style="text-transform:uppercase;letter-spacing:.05em">Administrador</div>
+
+            <div class="ij-form-group">
+              <label class="ij-label">Tu nombre completo <span class="ij-required">*</span></label>
+              <input type="text" id="nombre" class="ij-input" required>
+            </div>
+            <div class="ij-form-group">
+              <label class="ij-label">Correo electrónico <span class="ij-required">*</span></label>
+              <input type="email" id="email" class="ij-input" required autocomplete="email">
+            </div>
+            <div class="ij-form-group">
+              <label class="ij-label">Contraseña <span class="ij-required">*</span></label>
+              <input type="password" id="password" class="ij-input" required minlength="8" autocomplete="new-password">
+            </div>
+
+            <div class="ij-divider"></div>
+            <div class="ij-text-xs ij-font-semibold ij-text-muted ij-mb-2" style="text-transform:uppercase;letter-spacing:.05em">Empresa</div>
+
+            <div class="ij-form-group">
+              <label class="ij-label">Nombre de la empresa <span class="ij-required">*</span></label>
+              <input type="text" id="empresaNombre" class="ij-input" required>
+            </div>
+            <div class="ij-form-group">
+              <label class="ij-label">Descripción breve <span class="ij-required">*</span></label>
+              <textarea id="descripcion" class="ij-textarea" rows="3" required></textarea>
+            </div>
+            <div class="ij-grid ij-gap-3" style="grid-template-columns:1fr 1fr">
+              <div class="ij-form-group">
+                <label class="ij-label">Ubicación <span class="ij-required">*</span></label>
+                <input type="text" id="ubicacion" class="ij-input" required>
+              </div>
+              <div class="ij-form-group">
+                <label class="ij-label">Industria <span class="ij-required">*</span></label>
+                <input type="text" id="industria" class="ij-input" required>
+              </div>
+            </div>
+            <button type="submit" class="ij-btn ij-btn-primary ij-btn-block ij-mt-2" id="btnSubmit">Registrar empresa</button>
+          </form>
+        </div>
+      </div>
+
+      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
+        ¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+  <script type="module" src="/js/pages/registro-empresa.js"></script>
+</body>
+</html>

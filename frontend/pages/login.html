@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión — IntegraJobs</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <div class="ij-auth-wrap">
+    <div class="ij-auth-card">
+      <div class="ij-auth-brand">
+        <a href="/">IntegraJobs</a>
+        <div class="ij-text-xs ij-text-muted ij-mt-1">Portal de empleo · El Salvador</div>
+      </div>
+
+      <div class="ij-card">
+        <div class="ij-card-body">
+          <h5 class="ij-text-lg ij-font-bold ij-mb-1" style="text-align:center">Bienvenido de vuelta</h5>
+          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Selecciona tu tipo de cuenta para continuar</p>
+
+          <div class="ij-tabs" id="loginTabs">
+            <button type="button" class="active" data-type="candidato">Candidato</button>
+            <button type="button" data-type="empresa">Empresa</button>
+            <button type="button" data-type="admin">Admin</button>
+          </div>
+
+          <div id="alert" class="ij-alert ij-alert-error ij-hidden ij-mb-3"></div>
+
+          <form id="loginForm">
+            <div class="ij-form-group">
+              <label class="ij-label">Correo electrónico</label>
+              <input type="email" id="email" class="ij-input" required autocomplete="email" placeholder="tu@correo.com">
+            </div>
+            <div class="ij-form-group">
+              <label class="ij-label">Contraseña</label>
+              <input type="password" id="password" class="ij-input" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="ij-btn ij-btn-primary ij-btn-block" id="btnSubmit">Iniciar sesión</button>
+          </form>
+        </div>
+      </div>
+
+      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
+        ¿No tienes cuenta? <a href="/pages/registro.html">Regístrate</a>
+      </p>
+    </div>
+  </div>
+  <script type="module" src="/js/pages/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro Candidato — IntegraJobs</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <div class="ij-auth-wrap">
+    <div class="ij-auth-card" style="max-width:460px">
+      <div class="ij-auth-brand"><a href="/">IntegraJobs</a></div>
+
+      <div class="ij-card">
+        <div class="ij-card-body">
+          <h5 class="ij-text-lg ij-font-bold ij-mb-1" style="text-align:center">Registro — Candidato</h5>
+          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Crea tu cuenta para postular a empleos</p>
+
+          <div id="alert" class="ij-alert ij-alert-error ij-hidden ij-mb-3"></div>
+          <div id="success" class="ij-alert ij-alert-success ij-hidden ij-mb-3"></div>
+
+          <form id="registroForm">
+            <div class="ij-grid ij-gap-3" style="grid-template-columns:1fr 1fr">
+              <div class="ij-form-group">
+                <label class="ij-label">Nombre <span class="ij-required">*</span></label>
+                <input type="text" id="nombre" class="ij-input" required>
+              </div>
+              <div class="ij-form-group">
+                <label class="ij-label">Apellidos <span class="ij-required">*</span></label>
+                <input type="text" id="apellidos" class="ij-input" required>
+              </div>
+            </div>
+            <div class="ij-form-group">
+              <label class="ij-label">Correo electrónico <span class="ij-required">*</span></label>
+              <input type="email" id="email" class="ij-input" required autocomplete="email">
+            </div>
+            <div class="ij-form-group">
+              <label class="ij-label">Contraseña <span class="ij-required">*</span></label>
+              <input type="password" id="password" class="ij-input" required minlength="8" autocomplete="new-password">
+              <span class="ij-text-xs ij-text-muted-2">Mínimo 8 caracteres.</span>
+            </div>
+            <button type="submit" class="ij-btn ij-btn-primary ij-btn-block ij-mt-2" id="btnSubmit">Crear cuenta</button>
+          </form>
+        </div>
+      </div>
+
+      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
+        ¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+  <script type="module" src="/js/pages/registro-candidato.js"></script>
+</body>
+</html>

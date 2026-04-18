@@ -1,0 +1,42 @@
+# Dependencias
+backend/node_modules/
+node_modules/
+
+# Entorno (Comentado para que SÍ se suban al repositorio)
+# .env
+# .env.local
+# backend/.env
+
+# Build / Next.js legacy
+.next/
+dist/
+
+# Logs
+*.log
+
+# ========================
+# Herramientas de IA / Agentes / MCP
+# ========================
+.claude/
+CLAUDE.md
+.cursor/
+.windsurf/
+.roo/
+.agent/
+.codebuddy/
+.codex/
+.continue/
+.gemini/
+.kiro/
+.opencode/
+.qoder/
+.trae/
+.mcp.json
+.github/prompts/
+
+# Tests
+coverage/
+
+# Sistema
+.DS_Store
+*.pem
