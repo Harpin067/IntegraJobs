@@ -8,6 +8,7 @@ import vacantesRoutes  from './routes/vacantes.routes.js';
 import candidatoRoutes from './routes/candidato.routes.js';
 import empresaRoutes   from './routes/empresa.routes.js';
 import adminRoutes     from './routes/admin.routes.js';
+import publicRoutes    from './routes/public.routes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -20,6 +21,7 @@ export function createApp() {
   // Frontend estático (Plan 3)
   app.use(express.static(path.join(__dirname, '../../frontend')));
 
+  app.use('/api/public',    publicRoutes);
   app.use('/api/auth',      authRoutes);
   app.use('/api/vacantes',  vacantesRoutes);
   app.use('/api/candidato', candidatoRoutes);
