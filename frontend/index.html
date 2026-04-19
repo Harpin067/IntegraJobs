@@ -5,16 +5,168 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>IntegraJobs — Tu próximo empleo comienza aquí</title>
   <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    /* ── Nav premium ── */
+    .ij-public-nav {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 1px 8px -2px rgba(15,23,42,.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* ── Hero premium ── */
+    .hero-premium {
+      position: relative;
+      overflow: hidden;
+      padding: 5rem 1.5rem 4rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,86,219,.55) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 90% 110%, rgba(16,185,129,.25) 0%, transparent 60%),
+        linear-gradient(160deg, #0b1640 0%, #0f2460 45%, #0d1f54 100%);
+      text-align: center;
+      color: #fff;
+    }
+    /* Dot-grid overlay */
+    .hero-premium::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    /* Green glow bottom-right */
+    .hero-premium::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(16,185,129,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Hero logo */
+    .hero-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 1.25rem;
+      padding: .875rem 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .hero-logo-wrap img { height: 3rem; width: auto; display: block; }
+
+    /* Search bar */
+    .hero-search-wrap {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 0;
+      max-width: 720px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px -10px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.12);
+      overflow: hidden;
+    }
+    .hero-search-wrap input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      outline: none;
+      padding: 1.125rem 1.25rem;
+      font-size: .9375rem;
+      color: var(--color-text);
+      background: transparent;
+    }
+    .hero-search-wrap .search-divider {
+      width: 1px;
+      background: var(--color-border);
+      margin: .75rem 0;
+      flex-shrink: 0;
+    }
+    .hero-search-wrap button {
+      flex-shrink: 0;
+      padding: 0 1.75rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      font-size: .9375rem;
+      cursor: pointer;
+      transition: background .18s;
+      white-space: nowrap;
+    }
+    .hero-search-wrap button:hover { background: var(--color-primary-dk); }
+
+    /* Stat cards upgraded */
+    .ij-stat-card {
+      border-radius: var(--radius-xl) !important;
+      box-shadow: 0 4px 20px -4px rgba(15,23,42,.08) !important;
+      border: 1px solid var(--color-border-2) !important;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .ij-stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px -6px rgba(26,86,219,.12) !important;
+    }
+
+    /* Job cards upgraded */
+    .ij-job-card {
+      border-radius: var(--radius-xl) !important;
+      box-shadow: 0 2px 12px -3px rgba(15,23,42,.07) !important;
+      border: 1px solid var(--color-border-2) !important;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .ij-job-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px -8px rgba(26,86,219,.15) !important;
+      border-color: rgba(26,86,219,.25) !important;
+    }
+
+    /* Benefit cards */
+    .benefit-card {
+      background: #fff;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem;
+      box-shadow: 0 4px 20px -4px rgba(15,23,42,.07);
+      transition: box-shadow .2s;
+    }
+    .benefit-card:hover { box-shadow: 0 12px 36px -8px rgba(15,23,42,.12); }
+    .benefit-card.accent { border-color: var(--color-secondary); border-width: 2px; }
+
+    /* Section spacing */
+    .section-lg { padding: 5rem 1.5rem; }
+    .section-md { padding: 4rem 1.5rem; }
+
+    /* Eyebrow */
+    .ij-eyebrow {
+      letter-spacing: .08em;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
 
   <!-- ── NAV ── -->
   <nav class="ij-public-nav">
     <a href="/" class="ij-brand">
-      <img src="/img/logo.png" alt="IntegraJobs" style="height:2rem;width:auto" onerror="this.style.display='none';document.getElementById('nav-icon-fallback').style.display='flex'">
+      <img src="/img/logo.png" alt="IntegraJobs"
+           style="height:48px;width:auto;display:block"
+           onerror="this.style.display='none';document.getElementById('nav-icon-fallback').style.display='flex'">
       <span id="nav-icon-fallback" style="display:none;align-items:center;gap:.5rem">
         <span class="ij-brand-icon" id="nav-icon"></span>
-        <span class="ij-brand-name">IntegraJobs</span>
+        <span class="ij-brand-name" style="font-size:1rem;font-weight:700">IntegraJobs</span>
       </span>
     </a>
     <ul>
@@ -30,143 +182,237 @@
   </nav>
 
   <!-- ── HERO ── -->
-  <section class="ij-hero">
-    <div class="ij-container" style="position:relative;text-align:center">
-      <span class="ij-badge" style="background:rgba(255,255,255,.15);color:#fff;margin-bottom:1.25rem">
-        N.° 1 Portal de Empleo en El Salvador
+  <section class="hero-premium">
+    <div class="ij-container" style="position:relative;z-index:2">
+
+      <!-- Logo destacado en el hero -->
+      <div style="display:flex;justify-content:center;margin-bottom:1.75rem">
+        <div class="hero-logo-wrap">
+          <img src="/img/logo.png" alt="IntegraJobs"
+               onerror="this.parentElement.innerHTML='<span style=\'font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.02em\'>IntegraJobs</span>'">
+        </div>
+      </div>
+
+      <span class="ij-badge" style="background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.35);margin-bottom:1.5rem;font-size:.8125rem">
+        ✦ N.° 1 Portal de Empleo en El Salvador
       </span>
-      <h1 style="font-size:clamp(2rem,5vw,3.25rem);line-height:1.15;margin-bottom:1rem">
-        Tu carrera <em>empieza aquí</em>
+
+      <h1 style="font-size:clamp(2.25rem,5.5vw,3.75rem);line-height:1.1;margin-bottom:1.25rem;font-weight:800;letter-spacing:-.025em">
+        Tu próxima oportunidad<br><em style="color:#6ee7b7;font-style:normal">te está esperando</em>
       </h1>
-      <p class="lead" style="max-width:36rem;margin:0 auto 2rem">
+      <p style="font-size:1.125rem;color:rgba(255,255,255,.75);max-width:38rem;margin:0 auto 2.5rem;line-height:1.65">
         Conectamos talento salvadoreño con las mejores empresas. Miles de vacantes reales, actualizadas cada día.
       </p>
-      <form class="ij-hero-search" id="heroSearch">
-        <input type="text" name="q" placeholder="Cargo, empresa o habilidad..." aria-label="Buscar empleo" style="flex:2;min-width:0">
-        <input type="text" name="ubicacion" placeholder="Ubicación..." aria-label="Ubicación" style="flex:1;min-width:0;border-left:1px solid rgba(255,255,255,.2)">
-        <button type="submit">Buscar</button>
+
+      <!-- Search bar premium -->
+      <form id="heroSearch">
+        <div class="hero-search-wrap">
+          <input type="text" name="q"
+                 placeholder="Cargo, empresa o habilidad..."
+                 aria-label="Buscar empleo">
+          <div class="search-divider"></div>
+          <input type="text" name="ubicacion"
+                 placeholder="📍 Ubicación..."
+                 aria-label="Ubicación"
+                 style="flex:.6">
+          <button type="submit">Buscar empleos</button>
+        </div>
       </form>
-      <div id="heroIndustrias" class="ij-flex ij-gap-2 ij-justify-center" style="margin-top:1.25rem;flex-wrap:wrap;min-height:1.75rem"></div>
-      <div class="ij-flex ij-gap-3 ij-justify-center" style="margin-top:2rem;flex-wrap:wrap">
-        <a href="/pages/login.html" class="ij-btn ij-btn-lg" style="background:#fff;color:var(--color-primary)">Explorar empleos</a>
-        <a href="/pages/login.html?type=empresa" class="ij-btn ij-btn-lg" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Publicar vacante</a>
+
+      <!-- Tags de industria dinámicos -->
+      <div id="heroIndustrias" class="ij-flex ij-gap-2 ij-justify-center"
+           style="margin-top:1.5rem;flex-wrap:wrap;min-height:2rem"></div>
+
+      <div class="ij-flex ij-gap-3 ij-justify-center" style="margin-top:2.25rem;flex-wrap:wrap">
+        <a href="/pages/login.html" class="ij-btn ij-btn-lg"
+           style="background:#fff;color:var(--color-primary);font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2)">
+          Explorar empleos
+        </a>
+        <a href="/pages/login.html?type=empresa" class="ij-btn ij-btn-lg"
+           style="background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.35);backdrop-filter:blur(4px)">
+          Publicar vacante →
+        </a>
       </div>
     </div>
   </section>
 
   <!-- ── STATS ── -->
-  <section class="ij-section" style="padding:3rem 1.5rem">
-    <div class="ij-stats-grid">
-      <div class="ij-stat-card">
-        <div class="ij-stat-value" id="statVacantes">—</div>
-        <div class="ij-text-sm ij-font-semibold">Vacantes activas</div>
-        <div class="ij-text-xs ij-text-muted-2 ij-mt-1">actualizadas diario</div>
-      </div>
-      <div class="ij-stat-card">
-        <div class="ij-stat-value" id="statEmpresas">—</div>
-        <div class="ij-text-sm ij-font-semibold">Empresas registradas</div>
-        <div class="ij-text-xs ij-text-muted-2 ij-mt-1">verificadas</div>
-      </div>
-      <div class="ij-stat-card">
-        <div class="ij-stat-value">95%</div>
-        <div class="ij-text-sm ij-font-semibold">Tasa de éxito</div>
-        <div class="ij-text-xs ij-text-muted-2 ij-mt-1">de colocación</div>
-      </div>
-      <div class="ij-stat-card">
-        <div class="ij-stat-value">48h</div>
-        <div class="ij-text-sm ij-font-semibold">Tiempo medio</div>
-        <div class="ij-text-xs ij-text-muted-2 ij-mt-1">primera respuesta</div>
+  <section style="padding:4rem 1.5rem;background:var(--color-surface)">
+    <div class="ij-container">
+      <div class="ij-stats-grid">
+        <div class="ij-stat-card">
+          <div class="ij-stat-value" id="statVacantes" style="color:var(--color-primary)">—</div>
+          <div class="ij-text-sm ij-font-semibold">Vacantes activas</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">actualizadas diario</div>
+        </div>
+        <div class="ij-stat-card">
+          <div class="ij-stat-value" id="statEmpresas" style="color:var(--color-primary)">—</div>
+          <div class="ij-text-sm ij-font-semibold">Empresas registradas</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">verificadas</div>
+        </div>
+        <div class="ij-stat-card">
+          <div class="ij-stat-value" style="color:var(--color-secondary)">95%</div>
+          <div class="ij-text-sm ij-font-semibold">Tasa de éxito</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">de colocación</div>
+        </div>
+        <div class="ij-stat-card">
+          <div class="ij-stat-value" style="color:var(--color-secondary)">48h</div>
+          <div class="ij-text-sm ij-font-semibold">Tiempo medio</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">primera respuesta</div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ── FEATURED JOBS ── -->
-  <section class="ij-section" style="padding-top:1rem;padding-bottom:3rem">
+  <section style="padding:5rem 1.5rem;background:var(--color-bg)">
     <div class="ij-container">
-      <div class="ij-flex ij-justify-between ij-items-center ij-mb-4">
+      <div class="ij-flex ij-justify-between ij-items-center" style="margin-bottom:2.5rem">
         <div>
-          <div class="ij-eyebrow">Oportunidades</div>
-          <h2>Empleos destacados</h2>
+          <div class="ij-eyebrow" style="color:var(--color-primary);margin-bottom:.4rem">Oportunidades recientes</div>
+          <h2 style="font-size:1.875rem;letter-spacing:-.02em">Empleos destacados</h2>
         </div>
         <a href="/pages/login.html" class="ij-btn ij-btn-ghost ij-btn-sm">Ver todos →</a>
       </div>
       <div class="ij-grid ij-grid-cols-3 ij-gap-4" id="featuredJobs">
-        <div class="ij-job-card ij-skeleton-card" aria-hidden="true"></div>
-        <div class="ij-job-card ij-skeleton-card" aria-hidden="true"></div>
-        <div class="ij-job-card ij-skeleton-card" aria-hidden="true"></div>
+        <div class="ij-job-card ij-skeleton-card" aria-hidden="true"
+             style="min-height:160px;animation:ij-pulse 1.5s ease-in-out infinite"></div>
+        <div class="ij-job-card ij-skeleton-card" aria-hidden="true"
+             style="min-height:160px;animation:ij-pulse 1.5s ease-in-out infinite .15s"></div>
+        <div class="ij-job-card ij-skeleton-card" aria-hidden="true"
+             style="min-height:160px;animation:ij-pulse 1.5s ease-in-out infinite .3s"></div>
       </div>
     </div>
   </section>
 
   <!-- ── BENEFITS ── -->
-  <section class="ij-section" style="background:var(--color-slate-50);padding:4rem 1.5rem">
+  <section style="background:var(--color-slate-50);padding:5rem 1.5rem">
     <div class="ij-container">
-      <div style="text-align:center;margin-bottom:2.5rem">
-        <div class="ij-eyebrow">¿Por qué IntegraJobs?</div>
-        <h2>Una plataforma, dos mundos de posibilidades</h2>
+      <div style="text-align:center;margin-bottom:3rem">
+        <div class="ij-eyebrow" style="color:var(--color-primary);margin-bottom:.5rem">¿Por qué IntegraJobs?</div>
+        <h2 style="font-size:1.875rem;letter-spacing:-.02em">Una plataforma, dos mundos de posibilidades</h2>
       </div>
       <div class="ij-grid ij-grid-cols-2 ij-gap-6">
-        <div class="ij-card" style="padding:2rem">
-          <div class="ij-flex ij-items-center ij-gap-3" style="margin-bottom:1.5rem">
-            <div style="width:2.5rem;height:2.5rem;border-radius:var(--radius);background:var(--color-primary-10);display:flex;align-items:center;justify-content:center" id="benefit-icon-1"></div>
-            <h3 style="font-size:1.125rem">Para Candidatos</h3>
+
+        <!-- Candidatos -->
+        <div class="benefit-card">
+          <div class="ij-flex ij-items-center ij-gap-3" style="margin-bottom:1.75rem">
+            <div style="width:3rem;height:3rem;border-radius:var(--radius-lg);background:var(--color-primary-10);display:flex;align-items:center;justify-content:center;flex-shrink:0" id="benefit-icon-1"></div>
+            <div>
+              <div class="ij-text-xs ij-font-semibold" style="color:var(--color-primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">Para ti</div>
+              <h3 style="font-size:1.25rem;letter-spacing:-.01em">Para Candidatos</h3>
+            </div>
           </div>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.875rem">
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Accede a miles de vacantes activas sin costo</span></li>
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Crea alertas personalizadas y recibe notificaciones</span></li>
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Postula con un clic y rastrea tus solicitudes</span></li>
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Accede al foro comunitario y recursos de carrera</span></li>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1rem">
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Accede a miles de vacantes activas sin costo</span>
+            </li>
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Crea alertas personalizadas y recibe notificaciones</span>
+            </li>
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Postula con un clic y rastrea tus solicitudes</span>
+            </li>
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Accede al foro comunitario y recursos de carrera</span>
+            </li>
           </ul>
-          <a href="/pages/registro-candidato.html" class="ij-btn ij-btn-primary" style="margin-top:1.75rem;width:100%;justify-content:center">Buscar empleo gratis</a>
+          <a href="/pages/registro-candidato.html" class="ij-btn ij-btn-primary"
+             style="margin-top:2rem;width:100%;justify-content:center;padding:.875rem;font-size:.9375rem">
+            Buscar empleo gratis
+          </a>
         </div>
-        <div class="ij-card" style="padding:2rem;border-color:var(--color-secondary);border-width:2px">
-          <div class="ij-flex ij-items-center ij-gap-3" style="margin-bottom:1.5rem">
-            <div style="width:2.5rem;height:2.5rem;border-radius:var(--radius);background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center" id="benefit-icon-2"></div>
-            <h3 style="font-size:1.125rem">Para Empresas</h3>
+
+        <!-- Empresas -->
+        <div class="benefit-card accent">
+          <div class="ij-flex ij-items-center ij-gap-3" style="margin-bottom:1.75rem">
+            <div style="width:3rem;height:3rem;border-radius:var(--radius-lg);background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0" id="benefit-icon-2"></div>
+            <div>
+              <div class="ij-text-xs ij-font-semibold" style="color:var(--color-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">Recluta talento</div>
+              <h3 style="font-size:1.25rem;letter-spacing:-.01em">Para Empresas</h3>
+            </div>
           </div>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.875rem">
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Publica vacantes y llega a miles de candidatos</span></li>
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Gestiona postulaciones desde un panel centralizado</span></li>
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Obtén el sello de empresa verificada y genera confianza</span></li>
-            <li class="ij-flex ij-gap-3 ij-items-start"><span style="color:var(--color-secondary);margin-top:.1rem">✓</span><span class="ij-text-sm">Accede a estadísticas y métricas de tus vacantes</span></li>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1rem">
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Publica vacantes y llega a miles de candidatos</span>
+            </li>
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Gestiona postulaciones desde un panel centralizado</span>
+            </li>
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Obtén el sello de empresa verificada y genera confianza</span>
+            </li>
+            <li class="ij-flex ij-gap-3 ij-items-start">
+              <span style="width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(16,185,129,.12);color:var(--color-secondary);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;margin-top:.1rem">✓</span>
+              <span class="ij-text-sm" style="line-height:1.55">Accede a estadísticas y métricas de tus vacantes</span>
+            </li>
           </ul>
-          <a href="/pages/login.html?type=empresa" class="ij-btn" style="margin-top:1.75rem;width:100%;justify-content:center;background:var(--color-secondary);color:#fff">Publicar vacante</a>
+          <a href="/pages/login.html?type=empresa" class="ij-btn"
+             style="margin-top:2rem;width:100%;justify-content:center;padding:.875rem;font-size:.9375rem;background:var(--color-secondary);color:#fff">
+            Publicar vacante
+          </a>
         </div>
+
       </div>
     </div>
   </section>
 
   <!-- ── CTA FINAL ── -->
-  <section class="ij-section" style="background:linear-gradient(135deg,#0f172a,#0f2d6b 60%,var(--color-primary));color:#fff;text-align:center;padding:4rem 1.5rem">
-    <div class="ij-container">
-      <div class="ij-eyebrow" style="color:var(--color-secondary)">Empieza hoy</div>
-      <h2 style="color:#fff;font-size:clamp(1.5rem,4vw,2.25rem);margin-bottom:.75rem">¿Listo para dar el siguiente paso?</h2>
-      <p style="color:#cbd5e1;max-width:32rem;margin:0 auto 2rem">Únete a miles de profesionales y empresas que ya confían en IntegraJobs para conectar talento con oportunidades reales.</p>
+  <section style="position:relative;overflow:hidden;background:linear-gradient(135deg,#060e2b 0%,#0a1e5e 50%,#0e2d6b 100%);color:#fff;text-align:center;padding:5rem 1.5rem">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px;pointer-events:none"></div>
+    <div style="position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(26,86,219,.35) 0%,transparent 70%);pointer-events:none"></div>
+    <div class="ij-container" style="position:relative;z-index:2">
+      <div class="ij-eyebrow" style="color:#6ee7b7;margin-bottom:.75rem">Empieza hoy — es gratis</div>
+      <h2 style="color:#fff;font-size:clamp(1.75rem,4vw,2.75rem);letter-spacing:-.025em;font-weight:800;margin-bottom:1rem">
+        ¿Listo para dar el siguiente paso?
+      </h2>
+      <p style="color:rgba(255,255,255,.65);max-width:34rem;margin:0 auto 2.5rem;font-size:1.0625rem;line-height:1.65">
+        Únete a miles de profesionales y empresas que ya confían en IntegraJobs para conectar talento con oportunidades reales.
+      </p>
       <div class="ij-flex ij-gap-3 ij-justify-center" style="flex-wrap:wrap">
-        <a href="/pages/registro-candidato.html" class="ij-btn ij-btn-lg ij-btn-secondary">Crear cuenta gratis</a>
-        <a href="/pages/login.html?type=empresa" class="ij-btn ij-btn-lg" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Publicar vacante →</a>
+        <a href="/pages/registro-candidato.html" class="ij-btn ij-btn-lg ij-btn-secondary"
+           style="font-weight:600;box-shadow:0 8px 24px rgba(16,185,129,.35)">
+          Crear cuenta gratis
+        </a>
+        <a href="/pages/login.html?type=empresa" class="ij-btn ij-btn-lg"
+           style="background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.25);backdrop-filter:blur(4px)">
+          Publicar vacante →
+        </a>
       </div>
     </div>
   </section>
 
   <!-- ── FOOTER ── -->
-  <footer style="background:#020617;color:#94a3b8;padding:3rem 1.5rem 2rem">
+  <footer style="background:#020617;color:#94a3b8;padding:3rem 1.5rem 2rem;border-top:1px solid rgba(255,255,255,.06)">
     <div class="ij-container ij-flex ij-justify-between ij-items-center" style="flex-wrap:wrap;gap:1rem">
-      <div class="ij-flex ij-items-center ij-gap-2">
-        <img src="/img/logo.png" alt="IntegraJobs" style="height:1.5rem;width:auto;opacity:.85" onerror="this.style.display='none';document.getElementById('fnav-icon').style.display='inline-block'">
+      <div class="ij-flex ij-items-center ij-gap-3">
+        <img src="/img/logo.png" alt="IntegraJobs"
+             style="height:2rem;width:auto;opacity:.8"
+             onerror="this.style.display='none';document.getElementById('fnav-icon').style.display='inline-flex'">
         <span class="ij-brand-icon" style="background:var(--color-primary-15);color:#60a5fa;display:none" id="fnav-icon"></span>
-        <strong style="color:#fff">IntegraJobs</strong>
+        <span style="color:#64748b;font-size:.8125rem">© 2026 IntegraJobs. Hecho en El Salvador.</span>
       </div>
-      <span class="ij-text-xs" style="color:#475569">© 2026 IntegraJobs. Hecho en El Salvador.</span>
+      <div class="ij-flex ij-gap-4">
+        <a href="/pages/login.html" style="color:#64748b;font-size:.8125rem;transition:color .15s" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Empleos</a>
+        <a href="/pages/registro-candidato.html" style="color:#64748b;font-size:.8125rem;transition:color .15s" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Candidatos</a>
+        <a href="/pages/login.html?type=empresa" style="color:#64748b;font-size:.8125rem;transition:color .15s" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Empresas</a>
+      </div>
     </div>
   </footer>
 
   <script type="module">
     import { renderIcon } from '/js/icons.js';
-    document.getElementById('nav-icon').innerHTML       = renderIcon('briefcase');
-    document.getElementById('fnav-icon').innerHTML      = renderIcon('briefcase');
-    document.getElementById('benefit-icon-1').innerHTML = renderIcon('user');
-    document.getElementById('benefit-icon-2').innerHTML = renderIcon('building');
+    if (document.getElementById('nav-icon'))       document.getElementById('nav-icon').innerHTML       = renderIcon('briefcase');
+    if (document.getElementById('fnav-icon'))      document.getElementById('fnav-icon').innerHTML      = renderIcon('briefcase');
+    if (document.getElementById('benefit-icon-1')) document.getElementById('benefit-icon-1').innerHTML = renderIcon('user');
+    if (document.getElementById('benefit-icon-2')) document.getElementById('benefit-icon-2').innerHTML = renderIcon('building');
   </script>
   <script type="module" src="/js/index.js"></script>
 </body>
