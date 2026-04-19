@@ -11,8 +11,11 @@
   <!-- ── NAV ── -->
   <nav class="ij-public-nav">
     <a href="/" class="ij-brand">
-      <span class="ij-brand-icon" id="nav-icon"></span>
-      <span class="ij-brand-name">IntegraJobs</span>
+      <img src="/img/logo.png" alt="IntegraJobs" style="height:2rem;width:auto" onerror="this.style.display='none';document.getElementById('nav-icon-fallback').style.display='flex'">
+      <span id="nav-icon-fallback" style="display:none;align-items:center;gap:.5rem">
+        <span class="ij-brand-icon" id="nav-icon"></span>
+        <span class="ij-brand-name">IntegraJobs</span>
+      </span>
     </a>
     <ul>
       <li><a href="/">Inicio</a></li>
@@ -150,7 +153,8 @@
   <footer style="background:#020617;color:#94a3b8;padding:3rem 1.5rem 2rem">
     <div class="ij-container ij-flex ij-justify-between ij-items-center" style="flex-wrap:wrap;gap:1rem">
       <div class="ij-flex ij-items-center ij-gap-2">
-        <span class="ij-brand-icon" style="background:var(--color-primary-15);color:#60a5fa" id="fnav-icon"></span>
+        <img src="/img/logo.png" alt="IntegraJobs" style="height:1.5rem;width:auto;opacity:.85" onerror="this.style.display='none';document.getElementById('fnav-icon').style.display='inline-block'">
+        <span class="ij-brand-icon" style="background:var(--color-primary-15);color:#60a5fa;display:none" id="fnav-icon"></span>
         <strong style="color:#fff">IntegraJobs</strong>
       </div>
       <span class="ij-text-xs" style="color:#475569">© 2026 IntegraJobs. Hecho en El Salvador.</span>
