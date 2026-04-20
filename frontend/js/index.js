@@ -15,7 +15,7 @@ document.getElementById('heroSearch').addEventListener('submit', (e) => {
   if (q)        params.set('q', q);
   if (ubicacion) params.set('ubicacion', ubicacion);
   const qs = params.toString();
-  window.location.href = '/pages/login.html' + (qs ? `?${qs}` : '');
+  window.location.href = '/busqueda.html' + (qs ? `?${qs}` : '');
 });
 
 const logoFallback = (nombre) =>
@@ -27,7 +27,7 @@ const logoImg = (url, nombre) =>
     : logoFallback(nombre);
 
 const renderCard = (v) => `
-  <a href="/pages/login.html" class="ij-job-card">
+  <a href="/vacante.html?id=${escapeHtml(v.id)}" class="ij-job-card">
     <div class="ij-flex ij-items-start ij-gap-3 ij-mb-3">
       ${logoImg(v.empresa_logo, v.empresa_nombre)}
       <div style="min-width:0;flex:1">
