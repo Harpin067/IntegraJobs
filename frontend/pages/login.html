@@ -5,47 +5,328 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Iniciar sesión — IntegraJobs</title>
   <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    .split-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Lado izquierdo: Brand ── */
+    .split-brand {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,86,219,.55) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 90% 110%, rgba(16,185,129,.25) 0%, transparent 60%),
+        linear-gradient(160deg, #0b1640 0%, #0f2460 45%, #0d1f54 100%);
+      color: #fff;
+    }
+    .split-brand::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+    .split-brand::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; right: -100px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(16,185,129,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .brand-content { position: relative; z-index: 2; max-width: 400px; }
+    .brand-logo {
+      margin-bottom: 2.5rem;
+      display: inline-block;
+    }
+    .brand-logo img { height: 48px; width: auto; }
+    .brand-logo .fallback {
+      display: none;
+      align-items: center;
+      gap: .625rem;
+    }
+    .brand-logo .fallback .ij-brand-icon { background: rgba(255,255,255,.15); color: #fff; }
+    .brand-logo .fallback span { font-size: 1.25rem; font-weight: 800; color: #fff; }
+
+    .brand-content h2 {
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .brand-content p {
+      color: rgba(255,255,255,.65);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-stats {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .brand-stat-item { display: flex; flex-direction: column; gap: .2rem; }
+    .brand-stat-value { font-size: 1.5rem; font-weight: 800; color: #6ee7b7; }
+    .brand-stat-label { font-size: .75rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── Lado derecho: Form ── */
+    .split-form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: var(--color-surface);
+      overflow-y: auto;
+    }
+    .form-inner { width: 100%; max-width: 400px; }
+
+    .form-header { margin-bottom: 2rem; }
+    .form-header h1 {
+      font-size: 1.625rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      margin-bottom: .375rem;
+    }
+    .form-header p { color: var(--color-muted); font-size: .9375rem; }
+
+    /* Tabs */
+    .login-tabs {
+      display: flex;
+      background: var(--color-bg);
+      border-radius: var(--radius-lg);
+      padding: .25rem;
+      margin-bottom: 1.75rem;
+      gap: .25rem;
+    }
+    .login-tabs button {
+      flex: 1;
+      padding: .5rem;
+      border: none;
+      border-radius: var(--radius);
+      background: transparent;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: background .15s, color .15s, box-shadow .15s;
+    }
+    .login-tabs button.active {
+      background: #fff;
+      color: var(--color-primary);
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(15,23,42,.1);
+    }
+
+    /* Inputs premium */
+    .field { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.25rem; }
+    .field label { font-size: .875rem; font-weight: 600; color: var(--color-text); }
+    .field input {
+      padding: .875rem 1rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      font-size: .9375rem;
+      color: var(--color-text);
+      background: var(--color-surface);
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+      width: 100%;
+    }
+    .field input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(26,86,219,.12);
+    }
+
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+    }
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+    }
+    .checkbox-wrap input[type=checkbox] {
+      width: 1rem; height: 1rem;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+    .checkbox-wrap span { font-size: .875rem; color: var(--color-muted); }
+    .forgot-link { font-size: .875rem; color: var(--color-primary); }
+    .forgot-link:hover { color: var(--color-primary-dk); }
+
+    .submit-btn {
+      width: 100%;
+      padding: .9375rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(26,86,219,.35);
+      transition: background .15s, transform .15s, box-shadow .15s;
+      margin-bottom: 1.5rem;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: var(--color-primary-dk);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(26,86,219,.4);
+    }
+    .submit-btn:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+
+    .form-footer {
+      text-align: center;
+      font-size: .875rem;
+      color: var(--color-muted);
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border-2);
+    }
+    .form-footer a { color: var(--color-primary); font-weight: 600; }
+    .form-footer a:hover { color: var(--color-primary-dk); }
+    .form-footer .sep { margin: 0 .35rem; color: var(--color-border); }
+
+    /* Alert */
+    .form-alert {
+      display: none;
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      font-size: .875rem;
+      margin-bottom: 1.25rem;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.25);
+      color: var(--color-danger);
+    }
+    .form-alert.visible { display: block; }
+
+    /* Mobile: apilado */
+    @media (max-width: 768px) {
+      .split-wrap { grid-template-columns: 1fr; }
+      .split-brand { padding: 2.5rem 1.5rem; min-height: 260px; }
+      .brand-stats { gap: 1.5rem; }
+      .split-form { padding: 2rem 1.25rem; align-items: flex-start; }
+    }
+  </style>
 </head>
 <body>
-  <div class="ij-auth-wrap">
-    <div class="ij-auth-card">
-      <div class="ij-auth-brand">
-        <a href="/">IntegraJobs</a>
-        <div class="ij-text-xs ij-text-muted ij-mt-1">Portal de empleo · El Salvador</div>
-      </div>
 
-      <div class="ij-card">
-        <div class="ij-card-body">
-          <h5 class="ij-text-lg ij-font-bold ij-mb-1" style="text-align:center">Bienvenido de vuelta</h5>
-          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Selecciona tu tipo de cuenta para continuar</p>
+<div class="split-wrap">
 
-          <div class="ij-tabs" id="loginTabs">
-            <button type="button" class="active" data-type="candidato">Candidato</button>
-            <button type="button" data-type="empresa">Empresa</button>
-            <button type="button" data-type="admin">Admin</button>
-          </div>
+  <!-- ── Brand (izquierdo) ── -->
+  <div class="split-brand">
+    <div class="brand-content">
 
-          <div id="alert" class="ij-alert ij-alert-error ij-hidden ij-mb-3"></div>
-
-          <form id="loginForm">
-            <div class="ij-form-group">
-              <label class="ij-label">Correo electrónico</label>
-              <input type="email" id="email" class="ij-input" required autocomplete="email" placeholder="tu@correo.com">
-            </div>
-            <div class="ij-form-group">
-              <label class="ij-label">Contraseña</label>
-              <input type="password" id="password" class="ij-input" required autocomplete="current-password">
-            </div>
-            <button type="submit" class="ij-btn ij-btn-primary ij-btn-block" id="btnSubmit">Iniciar sesión</button>
-          </form>
+      <div class="brand-logo">
+        <img src="/img/logo.png" alt="IntegraJobs"
+             onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex'">
+        <div class="fallback" id="logo-fb">
+          <span class="ij-brand-icon" id="brand-icon"></span>
+          <span>IntegraJobs</span>
         </div>
       </div>
 
-      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
-        ¿No tienes cuenta? <a href="/pages/registro.html">Regístrate</a>
-      </p>
+      <h2>Conecta con las mejores oportunidades de El Salvador</h2>
+      <p>Miles de vacantes reales, empresas verificadas y herramientas diseñadas para impulsar tu carrera profesional.</p>
+
+      <div class="brand-stats">
+        <div class="brand-stat-item">
+          <span class="brand-stat-value">+20</span>
+          <span class="brand-stat-label">Vacantes activas</span>
+        </div>
+        <div class="brand-stat-item">
+          <span class="brand-stat-value">95%</span>
+          <span class="brand-stat-label">Tasa de éxito</span>
+        </div>
+        <div class="brand-stat-item">
+          <span class="brand-stat-value">48h</span>
+          <span class="brand-stat-label">Respuesta media</span>
+        </div>
+      </div>
+
     </div>
   </div>
-  <script type="module" src="/js/pages/login.js"></script>
+
+  <!-- ── Form (derecho) ── -->
+  <div class="split-form">
+    <div class="form-inner">
+
+      <div class="form-header">
+        <h1>Bienvenido de vuelta</h1>
+        <p>Ingresa a tu cuenta para continuar</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="login-tabs" id="loginTabs">
+        <button type="button" data-type="candidato" class="active">Candidato</button>
+        <button type="button" data-type="empresa">Empresa</button>
+        <button type="button" data-type="admin">Admin</button>
+      </div>
+
+      <!-- Alert -->
+      <div class="form-alert" id="alertEl"></div>
+
+      <!-- Form -->
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email"
+                 placeholder="tu@correo.com"
+                 autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password"
+                 placeholder="••••••••"
+                 autocomplete="current-password" required>
+        </div>
+
+        <div class="field-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="remember">
+            <span>Recordarme</span>
+          </label>
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="submit-btn" id="btnSubmit">
+          Iniciar sesión
+        </button>
+      </form>
+
+      <div class="form-footer">
+        ¿No tienes cuenta?
+        <a href="/pages/registro-candidato.html">Candidato</a>
+        <span class="sep">·</span>
+        <a href="/pages/registro-empresa.html">Empresa</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { renderIcon } from '/js/icons.js';
+  const el = document.getElementById('brand-icon');
+  if (el) el.innerHTML = renderIcon('briefcase');
+</script>
+<script type="module" src="/js/pages/login.js"></script>
 </body>
 </html>
