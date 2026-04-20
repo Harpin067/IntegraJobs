@@ -28,9 +28,10 @@ router.post('/registro/empresa',
   body('password').isLength({ min: 8 }).withMessage('Mínimo 8 caracteres'),
   body('nombre').notEmpty().trim(),
   body('empresaNombre').notEmpty().trim(),
-  body('descripcion').notEmpty().trim(),
+  body('descripcion').optional().trim(),
   body('ubicacion').notEmpty().trim(),
   body('industria').notEmpty().trim(),
+  body('sitioWeb').optional().trim(),
   validate,
   ctrl.registrarEmpresa
 );

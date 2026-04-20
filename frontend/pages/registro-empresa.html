@@ -5,67 +5,329 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Registro Empresa — IntegraJobs</title>
   <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    .split-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Lado izquierdo ── */
+    .split-brand {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3.5rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,86,219,.6) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 90% 110%, rgba(16,185,129,.28) 0%, transparent 60%),
+        linear-gradient(160deg, #0b1640 0%, #0f2460 45%, #0d1f54 100%);
+      color: #fff;
+    }
+    .split-brand::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.065) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+    .split-brand::after {
+      content: '';
+      position: absolute;
+      bottom: -120px; right: -120px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(16,185,129,.2) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .brand-inner { position: relative; z-index: 2; max-width: 420px; }
+    .brand-logo { margin-bottom: 3rem; display: inline-block; }
+    .brand-logo img { height: 48px; width: auto; display: block; }
+    .brand-logo-fallback { display: none; align-items: center; gap: .625rem; }
+    .brand-logo-fallback .ij-brand-icon { background: rgba(255,255,255,.15); color: #fff; }
+    .brand-logo-fallback span { font-size: 1.25rem; font-weight: 800; color: #fff; }
+
+    .brand-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .35rem .875rem;
+      border-radius: 999px;
+      background: rgba(16,185,129,.18);
+      border: 1px solid rgba(16,185,129,.35);
+      color: #6ee7b7;
+      font-size: .8125rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .brand-heading {
+      font-size: clamp(1.625rem, 2.5vw, 2.125rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .brand-sub {
+      color: rgba(255,255,255,.65);
+      font-size: .9375rem;
+      line-height: 1.7;
+      margin-bottom: 2.75rem;
+    }
+    .brand-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .brand-stat { display: flex; flex-direction: column; gap: .25rem; }
+    .brand-stat-value { font-size: 1.5rem; font-weight: 800; color: #6ee7b7; }
+    .brand-stat-label {
+      font-size: .6875rem; color: rgba(255,255,255,.5);
+      text-transform: uppercase; letter-spacing: .07em;
+    }
+
+    /* ── Lado derecho ── */
+    .split-form {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: #fff;
+      overflow-y: auto;
+    }
+    .form-inner { width: 100%; max-width: 420px; padding: 2rem 0; }
+
+    .form-header { margin-bottom: 1.875rem; }
+    .form-header h1 {
+      font-size: 1.625rem; font-weight: 800;
+      letter-spacing: -.02em; margin-bottom: .375rem;
+    }
+    .form-header p { color: var(--color-muted); font-size: .9375rem; }
+
+    .section-label {
+      font-size: .75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--color-muted);
+      margin-bottom: .875rem; margin-top: 1.5rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--color-border-2);
+    }
+    .section-label:first-of-type { margin-top: 0; }
+
+    .field { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.125rem; }
+    .field label { font-size: .875rem; font-weight: 600; color: var(--color-text); }
+    .field input, .field select {
+      padding: .875rem 1rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      font-size: .9375rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      width: 100%;
+    }
+    .field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+    .field input:focus, .field select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(26,86,219,.11);
+    }
+    .field-hint { font-size: .8125rem; color: var(--color-muted); margin-top: .25rem; }
+
+    .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-alert {
+      display: none;
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      font-size: .875rem;
+      margin-bottom: 1.25rem;
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.22);
+      color: var(--color-danger);
+    }
+    .form-alert.show { display: block; }
+
+    .register-btn {
+      width: 100%; padding: .9375rem;
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-lg);
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(26,86,219,.35);
+      transition: background .15s, transform .15s, box-shadow .15s;
+      margin-bottom: 1.5rem;
+    }
+    .register-btn:hover:not(:disabled) {
+      background: var(--color-primary-dk);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(26,86,219,.4);
+    }
+    .register-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .form-footer {
+      text-align: center;
+      font-size: .875rem;
+      color: var(--color-muted);
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border-2);
+    }
+    .form-footer a { color: var(--color-primary); font-weight: 600; }
+    .form-footer a:hover { color: var(--color-primary-dk); }
+
+    @media (max-width: 768px) {
+      .split-wrap { grid-template-columns: 1fr; }
+      .split-brand { padding: 2.25rem 1.5rem; min-height: 220px; }
+      .split-form { padding: 2rem 1.25rem; }
+      .fields-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <div class="ij-auth-wrap">
-    <div class="ij-auth-card" style="max-width:540px">
-      <div class="ij-auth-brand"><a href="/">IntegraJobs</a></div>
 
-      <div class="ij-card">
-        <div class="ij-card-body">
-          <h5 class="ij-text-lg ij-font-bold ij-mb-1" style="text-align:center">Registro — Empresa</h5>
-          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Publica vacantes y recluta al mejor talento</p>
+<div class="split-wrap">
 
-          <div id="alert" class="ij-alert ij-alert-error ij-hidden ij-mb-3"></div>
-          <div id="success" class="ij-alert ij-alert-success ij-hidden ij-mb-3"></div>
+  <!-- ── Marca ── -->
+  <div class="split-brand">
+    <div class="brand-inner">
 
-          <form id="registroForm">
-            <div class="ij-text-xs ij-font-semibold ij-text-muted ij-mb-2" style="text-transform:uppercase;letter-spacing:.05em">Administrador</div>
-
-            <div class="ij-form-group">
-              <label class="ij-label">Tu nombre completo <span class="ij-required">*</span></label>
-              <input type="text" id="nombre" class="ij-input" required>
-            </div>
-            <div class="ij-form-group">
-              <label class="ij-label">Correo electrónico <span class="ij-required">*</span></label>
-              <input type="email" id="email" class="ij-input" required autocomplete="email">
-            </div>
-            <div class="ij-form-group">
-              <label class="ij-label">Contraseña <span class="ij-required">*</span></label>
-              <input type="password" id="password" class="ij-input" required minlength="8" autocomplete="new-password">
-            </div>
-
-            <div class="ij-divider"></div>
-            <div class="ij-text-xs ij-font-semibold ij-text-muted ij-mb-2" style="text-transform:uppercase;letter-spacing:.05em">Empresa</div>
-
-            <div class="ij-form-group">
-              <label class="ij-label">Nombre de la empresa <span class="ij-required">*</span></label>
-              <input type="text" id="empresaNombre" class="ij-input" required>
-            </div>
-            <div class="ij-form-group">
-              <label class="ij-label">Descripción breve <span class="ij-required">*</span></label>
-              <textarea id="descripcion" class="ij-textarea" rows="3" required></textarea>
-            </div>
-            <div class="ij-grid ij-gap-3" style="grid-template-columns:1fr 1fr">
-              <div class="ij-form-group">
-                <label class="ij-label">Ubicación <span class="ij-required">*</span></label>
-                <input type="text" id="ubicacion" class="ij-input" required>
-              </div>
-              <div class="ij-form-group">
-                <label class="ij-label">Industria <span class="ij-required">*</span></label>
-                <input type="text" id="industria" class="ij-input" required>
-              </div>
-            </div>
-            <button type="submit" class="ij-btn ij-btn-primary ij-btn-block ij-mt-2" id="btnSubmit">Registrar empresa</button>
-          </form>
+      <div class="brand-logo">
+        <img src="/img/logo.png" alt="IntegraJobs"
+             onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
+        <div class="brand-logo-fallback" id="logoFb">
+          <span class="ij-brand-icon" id="brandIcon"></span>
+          <span>IntegraJobs</span>
         </div>
       </div>
 
-      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
-        ¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión</a>
+      <div class="brand-tag">✦ Para Empresas</div>
+
+      <h2 class="brand-heading">
+        Encuentra el mejor talento<br>para tu empresa
+      </h2>
+      <p class="brand-sub">
+        Publica vacantes, gestiona candidatos y construye el equipo que tu empresa necesita. Revisión de cuenta en menos de 24 horas.
       </p>
+
+      <div class="brand-stats">
+        <div class="brand-stat">
+          <span class="brand-stat-value">+20</span>
+          <span class="brand-stat-label">Vacantes activas</span>
+        </div>
+        <div class="brand-stat">
+          <span class="brand-stat-value">24h</span>
+          <span class="brand-stat-label">Revisión de cuenta</span>
+        </div>
+        <div class="brand-stat">
+          <span class="brand-stat-value">100%</span>
+          <span class="brand-stat-label">Gratis para empezar</span>
+        </div>
+      </div>
+
     </div>
   </div>
-  <script type="module" src="/js/pages/registro-empresa.js"></script>
+
+  <!-- ── Formulario ── -->
+  <div class="split-form">
+    <div class="form-inner">
+
+      <div class="form-header">
+        <h1>Registra tu empresa</h1>
+        <p>Empieza a publicar vacantes hoy mismo</p>
+      </div>
+
+      <div class="form-alert" id="alertEl"></div>
+
+      <form id="registroForm" novalidate>
+
+        <div class="section-label">Datos de la empresa</div>
+
+        <div class="field">
+          <label for="empresaNombre">Nombre de la empresa <span style="color:var(--color-danger)">*</span></label>
+          <input type="text" id="empresaNombre" name="empresaNombre" placeholder="Ej. Tech Solutions S.A. de C.V." required>
+        </div>
+
+        <div class="fields-row">
+          <div class="field">
+            <label for="industria">Industria <span style="color:var(--color-danger)">*</span></label>
+            <select id="industria" name="industria" required>
+              <option value="" disabled selected>Selecciona</option>
+              <option value="Tecnología">Tecnología</option>
+              <option value="Manufactura">Manufactura</option>
+              <option value="Comercio y Retail">Comercio y Retail</option>
+              <option value="Servicios Financieros">Servicios Financieros</option>
+              <option value="Salud">Salud</option>
+              <option value="Educación">Educación</option>
+              <option value="Construcción">Construcción</option>
+              <option value="Logística y Transporte">Logística y Transporte</option>
+              <option value="Agricultura">Agricultura</option>
+              <option value="Turismo y Hospitalidad">Turismo y Hospitalidad</option>
+              <option value="Medios y Comunicación">Medios y Comunicación</option>
+              <option value="Servicios Profesionales">Servicios Profesionales</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ubicacion">Ubicación <span style="color:var(--color-danger)">*</span></label>
+            <select id="ubicacion" name="ubicacion" required>
+              <option value="" disabled selected>Departamento</option>
+              <option value="Ahuachapán">Ahuachapán</option>
+              <option value="Cabañas">Cabañas</option>
+              <option value="Chalatenango">Chalatenango</option>
+              <option value="Cuscatlán">Cuscatlán</option>
+              <option value="La Libertad">La Libertad</option>
+              <option value="La Paz">La Paz</option>
+              <option value="La Unión">La Unión</option>
+              <option value="Morazán">Morazán</option>
+              <option value="San Miguel">San Miguel</option>
+              <option value="San Salvador">San Salvador</option>
+              <option value="San Vicente">San Vicente</option>
+              <option value="Santa Ana">Santa Ana</option>
+              <option value="Sonsonate">Sonsonate</option>
+              <option value="Usulután">Usulután</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="sitioWeb">Sitio web <span style="color:var(--color-muted);font-weight:400">(opcional)</span></label>
+          <input type="url" id="sitioWeb" name="sitioWeb" placeholder="https://tuempresa.com">
+        </div>
+
+        <div class="section-label">Cuenta de acceso</div>
+
+        <div class="field">
+          <label for="nombre">Tu nombre completo <span style="color:var(--color-danger)">*</span></label>
+          <input type="text" id="nombre" name="nombre" placeholder="Ana Martínez" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Correo corporativo <span style="color:var(--color-danger)">*</span></label>
+          <input type="email" id="email" name="email" placeholder="admin@tuempresa.com" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Contraseña <span style="color:var(--color-danger)">*</span></label>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" required minlength="8">
+          <span class="field-hint">Mínimo 8 caracteres.</span>
+        </div>
+
+        <button type="submit" class="register-btn" id="btn-submit" style="margin-top:.5rem">
+          Registrar empresa
+        </button>
+      </form>
+
+      <div class="form-footer">
+        ¿Ya tienes cuenta? <a href="/pages/login.html?type=empresa">Inicia sesión</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { renderIcon } from '/js/icons.js';
+  const ic = document.getElementById('brandIcon');
+  if (ic) ic.innerHTML = renderIcon('briefcase');
+</script>
+<script type="module" src="/js/pages/registro-empresa.js"></script>
 </body>
 </html>

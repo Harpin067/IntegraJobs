@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro Exitoso — IntegraJobs</title>
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,86,219,.08) 0%, transparent 70%),
+        #f8fafc;
+    }
+
+    .success-card {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 32px rgba(15,23,42,.1);
+      padding: 3rem 2.5rem;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 4.5rem; height: 4.5rem;
+      border-radius: 50%;
+      background: rgba(16,185,129,.1);
+      border: 2px solid rgba(16,185,129,.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.75rem;
+      font-size: 2rem;
+    }
+
+    .success-card h1 {
+      font-size: 1.625rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--color-text);
+      margin-bottom: .625rem;
+    }
+
+    .success-card p {
+      color: var(--color-muted);
+      font-size: .9375rem;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding: 0;
+      margin: 2rem 0;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: .875rem;
+    }
+    .steps-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: .875rem;
+      font-size: .9375rem;
+      color: var(--color-text);
+    }
+    .step-check {
+      width: 1.5rem; height: 1.5rem; flex-shrink: 0;
+      border-radius: 50%;
+      background: rgba(16,185,129,.12);
+      color: #10B981;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .875rem; font-weight: 700;
+      margin-top: .1rem;
+    }
+    .step-text strong { color: var(--color-text); }
+    .step-text span { color: var(--color-muted); font-size: .875rem; display: block; }
+
+    .notice-box {
+      background: rgba(251,191,36,.08);
+      border: 1px solid rgba(251,191,36,.3);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      font-size: .875rem;
+      color: #92400e;
+      text-align: left;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+    }
+    .notice-icon { font-size: 1.125rem; flex-shrink: 0; }
+
+    .btn-home {
+      display: inline-block;
+      padding: .9375rem 2rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: none; border-radius: var(--radius-lg);
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(26,86,219,.35);
+      transition: background .15s, transform .15s;
+    }
+    .btn-home:hover {
+      background: var(--color-primary-dk);
+      transform: translateY(-1px);
+    }
+
+    .brand-logo { margin-bottom: 2rem; display: inline-block; }
+    .brand-logo img { height: 40px; width: auto; display: block; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <div class="success-card">
+
+    <div class="brand-logo">
+      <img src="/img/logo.png" alt="IntegraJobs"
+           onerror="this.style.display='none'">
+    </div>
+
+    <div class="success-icon">✅</div>
+
+    <h1>¡Registro completado!</h1>
+    <p>Tu empresa ha sido registrada exitosamente en IntegraJobs. Tu cuenta está en proceso de verificación.</p>
+
+    <ul class="steps-list">
+      <li>
+        <div class="step-check">✓</div>
+        <div class="step-text">
+          <strong>Empresa registrada</strong>
+          <span>Tus datos han sido guardados correctamente.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-check" style="background:rgba(26,86,219,.1);color:var(--color-primary)">2</div>
+        <div class="step-text">
+          <strong>Revisión por el administrador</strong>
+          <span>Un administrador de IntegraJobs validará tu perfil en las próximas 24 horas.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-check" style="background:rgba(26,86,219,.1);color:var(--color-primary)">3</div>
+        <div class="step-text">
+          <strong>Acceso completo a la plataforma</strong>
+          <span>Una vez aprobada, podrás publicar vacantes y gestionar candidatos.</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice-box">
+      <span class="notice-icon">⚠️</span>
+      <div>
+        <strong>Pendiente de verificación.</strong> Recibirás acceso a tu dashboard de empresa en cuanto un administrador revise y apruebe tu perfil. Revisa tu correo para actualizaciones.
+      </div>
+    </div>
+
+    <a href="/" class="btn-home">Volver al inicio</a>
+
+  </div>
+</div>
+
+</body>
+</html>

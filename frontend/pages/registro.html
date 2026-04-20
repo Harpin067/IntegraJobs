@@ -5,36 +5,232 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crear cuenta — IntegraJobs</title>
   <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -5%, rgba(26,86,219,.07) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 85% 105%, rgba(16,185,129,.06) 0%, transparent 60%),
+        #f8fafc;
+    }
+
+    .brand-logo {
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+    .brand-logo img {
+      height: 48px;
+      width: auto;
+      display: inline-block;
+    }
+    .brand-logo-fallback {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: .625rem;
+    }
+    .brand-logo-fallback span { font-size: 1.375rem; font-weight: 800; color: var(--color-text); }
+
+    .selector-card {
+      width: 100%;
+      max-width: 560px;
+      background: #fff;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 40px rgba(15,23,42,.09), 0 1px 3px rgba(15,23,42,.06);
+      padding: 2.75rem 2.5rem;
+    }
+
+    .selector-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .selector-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--color-text);
+      margin-bottom: .375rem;
+    }
+    .selector-header p {
+      color: var(--color-muted);
+      font-size: .9375rem;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .type-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.625rem 1.375rem;
+      border-radius: 1rem;
+      border: 2px solid var(--color-border);
+      background: var(--color-surface);
+      text-decoration: none;
+      color: var(--color-text);
+      transition: border-color .18s, box-shadow .18s, transform .18s, background .18s;
+      cursor: pointer;
+    }
+    .type-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .type-card.candidato:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 28px rgba(26,86,219,.18), 0 0 0 4px rgba(26,86,219,.07);
+      background: rgba(26,86,219,.025);
+    }
+    .type-card.empresa:hover {
+      border-color: #10B981;
+      box-shadow: 0 8px 28px rgba(16,185,129,.18), 0 0 0 4px rgba(16,185,129,.07);
+      background: rgba(16,185,129,.025);
+    }
+
+    .type-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: .75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+    .type-icon svg { width: 1.5rem; height: 1.5rem; }
+
+    .type-card.candidato .type-icon {
+      background: rgba(26,86,219,.1);
+      color: var(--color-primary);
+    }
+    .type-card.empresa .type-icon {
+      background: rgba(16,185,129,.12);
+      color: #10B981;
+    }
+
+    .type-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: .375rem;
+    }
+    .type-card-desc {
+      font-size: .8125rem;
+      color: var(--color-muted);
+      line-height: 1.55;
+    }
+
+    .type-card-cta {
+      margin-top: 1rem;
+      font-size: .8125rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .type-card.candidato .type-card-cta { color: var(--color-primary); }
+    .type-card.empresa   .type-card-cta { color: #10B981; }
+
+    .type-card-cta svg { width: .9rem; height: .9rem; }
+
+    .selector-footer {
+      text-align: center;
+      font-size: .875rem;
+      color: var(--color-muted);
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border-2);
+    }
+    .selector-footer a {
+      color: var(--color-primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .selector-footer a:hover { color: var(--color-primary-dk); }
+
+    @media (max-width: 480px) {
+      .type-grid { grid-template-columns: 1fr; }
+      .selector-card { padding: 2rem 1.25rem; }
+    }
+  </style>
 </head>
 <body>
-  <div class="ij-auth-wrap">
-    <div class="ij-auth-card" style="max-width:560px">
-      <div class="ij-auth-brand"><a href="/">IntegraJobs</a></div>
 
-      <div class="ij-card">
-        <div class="ij-card-body">
-          <h5 class="ij-text-lg ij-font-bold" style="text-align:center">¿Qué tipo de cuenta necesitas?</h5>
-          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Elige cómo quieres usar IntegraJobs</p>
+<div class="page-wrap">
 
-          <div class="ij-grid ij-gap-3" style="grid-template-columns:1fr 1fr">
-            <a href="/pages/registro-candidato.html" class="ij-card ij-card-hover" style="text-decoration:none;padding:1.5rem">
-              <div class="ij-brand-icon" style="width:42px;height:42px;background:var(--color-primary-10);color:var(--color-primary);margin-bottom:.75rem"></div>
-              <div class="ij-font-semibold">Soy candidato</div>
-              <div class="ij-text-xs ij-text-muted ij-mt-1">Busco empleo y quiero postularme a vacantes verificadas.</div>
-            </a>
-            <a href="/pages/registro-empresa.html" class="ij-card ij-card-hover" style="text-decoration:none;padding:1.5rem">
-              <div class="ij-brand-icon" style="width:42px;height:42px;background:rgba(16,185,129,.12);color:var(--color-secondary);margin-bottom:.75rem"></div>
-              <div class="ij-font-semibold">Soy empresa</div>
-              <div class="ij-text-xs ij-text-muted ij-mt-1">Quiero publicar vacantes y gestionar candidatos.</div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
-        ¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión</a>
-      </p>
+  <div class="brand-logo">
+    <img src="/img/logo.png" alt="IntegraJobs"
+         onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
+    <div class="brand-logo-fallback" id="logoFb">
+      <span id="brandIconWrap"></span>
+      <span>IntegraJobs</span>
     </div>
   </div>
+
+  <div class="selector-card">
+
+    <div class="selector-header">
+      <h1>¿Qué tipo de cuenta necesitas?</h1>
+      <p>Elige cómo quieres usar IntegraJobs</p>
+    </div>
+
+    <div class="type-grid">
+
+      <a href="/pages/registro-candidato.html" class="type-card candidato">
+        <div class="type-icon" id="iconCandidato"></div>
+        <div class="type-card-title">Soy candidato</div>
+        <div class="type-card-desc">Busco empleo y quiero postularme a vacantes verificadas.</div>
+        <div class="type-card-cta">
+          Registrarme
+          <span id="arrowCandidato"></span>
+        </div>
+      </a>
+
+      <a href="/pages/registro-empresa.html" class="type-card empresa">
+        <div class="type-icon" id="iconEmpresa"></div>
+        <div class="type-card-title">Soy empresa</div>
+        <div class="type-card-desc">Quiero publicar vacantes y gestionar candidatos.</div>
+        <div class="type-card-cta">
+          Registrar empresa
+          <span id="arrowEmpresa"></span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="selector-footer">
+      ¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión</a>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+  import { renderIcon } from '/js/icons.js';
+
+  const iconCandidato = document.getElementById('iconCandidato');
+  const iconEmpresa   = document.getElementById('iconEmpresa');
+  const arrowC        = document.getElementById('arrowCandidato');
+  const arrowE        = document.getElementById('arrowEmpresa');
+  const logoIcon      = document.getElementById('brandIconWrap');
+
+  if (iconCandidato) iconCandidato.innerHTML = renderIcon('user');
+  if (iconEmpresa)   iconEmpresa.innerHTML   = renderIcon('briefcase');
+  if (arrowC)        arrowC.innerHTML        = renderIcon('arrow-right');
+  if (arrowE)        arrowE.innerHTML        = renderIcon('arrow-right');
+  if (logoIcon)      logoIcon.innerHTML      = renderIcon('briefcase');
+</script>
 </body>
 </html>
