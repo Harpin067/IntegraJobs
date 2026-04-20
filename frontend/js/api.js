@@ -19,7 +19,17 @@ export const apiFetch = async (path, options = {}) => {
     return;
   }
 
-  const data = await res.json();
-  if (!res.ok) throw Object.assign(new Error(data.error ?? 'Error'), { status: res.status, data });
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    // Construye un mensaje útil: primero el error general, luego los detalles
+    // de validación (express-validator → { campo, mensaje }) si existen.
+    let message = data.error ?? `Error ${res.status}`;
+    if (Array.isArray(data.details) && data.details.length) {
+      const extras = data.details.map(d => `${d.campo}: ${d.mensaje}`).join(' · ');
+      message = `${message} — ${extras}`;
+    }
+    throw Object.assign(new Error(message), { status: res.status, data });
+  }
   return data;
 };

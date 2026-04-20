@@ -1,7 +1,7 @@
 // backend/src/routes/auth.routes.js
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { validate } from '../middleware/validate.middleware.js';
+import { validate } from '../middlewares/error.middleware.js';
 import * as ctrl from '../controllers/auth.controller.js';
 
 const router = Router();

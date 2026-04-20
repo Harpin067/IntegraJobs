@@ -9,6 +9,7 @@ import candidatoRoutes from './routes/candidato.routes.js';
 import empresaRoutes   from './routes/empresa.routes.js';
 import adminRoutes     from './routes/admin.routes.js';
 import publicRoutes    from './routes/public.routes.js';
+import { notFound, errorHandler } from './middlewares/error.middleware.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -28,18 +29,8 @@ export function createApp() {
   app.use('/api/empresa',   empresaRoutes);
   app.use('/api/admin',     adminRoutes);
 
-  // 404 para rutas API no encontradas
-  app.use('/api', (req, res) => {
-    res.status(404).json({ error: 'Ruta no encontrada' });
-  });
-
-  // Error handler global
-  app.use((err, req, res, _next) => {
-    const status = err.statusCode ?? 500;
-    const message = status === 500 ? 'Error interno del servidor' : err.message;
-    if (status === 500) console.error(err);
-    res.status(status).json({ error: message });
-  });
+  app.use('/api', notFound);
+  app.use(errorHandler);
 
   return app;
 }

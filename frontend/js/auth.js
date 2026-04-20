@@ -29,9 +29,11 @@ export const requireAuth = () => {
 };
 
 export const login = async (email, password, attemptedRole) => {
+  // Backend espera `loginType` en minúsculas: 'candidato' | 'empresa' | 'admin'
+  const loginType = String(attemptedRole ?? 'candidato').toLowerCase();
   const data = await apiFetch('/auth/login', {
     method: 'POST',
-    body: JSON.stringify({ email, password, attemptedRole }),
+    body: JSON.stringify({ email, password, loginType }),
   });
   localStorage.setItem('token', data.token);
   localStorage.setItem('user', JSON.stringify(data.user));

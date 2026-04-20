@@ -1,112 +1,107 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { pool } from '../db/db.js';
+import { prisma } from '../db/prisma.js';
 import { env } from '../config/env.js';
+import { httpError } from '../middlewares/error.middleware.js';
 
-const makeToken = (user) =>
+const signToken = (user, companyId = null) =>
   jwt.sign(
-    { id: user.id, role: user.role, nombre: user.nombre ?? user.name, email: user.email,
-      companyId: user.company_id ?? user.companyId ?? null },
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      nombre: user.nombre ?? user.name ?? null,
+      companyId,
+    },
     env.JWT_SECRET,
     { expiresIn: '8h' }
   );
 
-const makeError = (msg, code) => {
-  const err = new Error(msg);
-  err.statusCode = code;
-  return err;
-};
+const publicUser = (user, companyId = null) => ({
+  id: user.id,
+  email: user.email,
+  role: user.role,
+  nombre: user.nombre ?? user.name ?? null,
+  companyId,
+});
 
-export const login = async ({ email, password, attemptedRole }) => {
-  const { rows } = await pool.query(
-    `SELECT u.*, c.is_verified AS company_verified, c.id AS company_id
-     FROM users u
-     LEFT JOIN companies c ON c.user_id = u.id
-     WHERE u.email = $1`,
-    [email]
-  );
-  const user = rows[0];
+// ─── LOGIN ──────────────────────────────────────────────────────────
+export const login = async ({ email, password, loginType }) => {
+  const attempted = String(loginType || '').toUpperCase();
 
-  if (!user || !user.password_hash) throw makeError('Credenciales incorrectas', 401);
-  if (!user.is_active) throw makeError('Tu cuenta ha sido desactivada. Contacta a soporte.', 403);
+  const user = await prisma.user.findUnique({
+    where: { email },
+    include: { company: true },
+  });
 
-  const valid = await bcrypt.compare(password, user.password_hash);
-  if (!valid) throw makeError('Credenciales incorrectas', 401);
+  if (!user || !user.passwordHash) throw httpError('Credenciales incorrectas', 401);
+  if (!user.isActive) throw httpError('Tu cuenta ha sido desactivada. Contacta a soporte.', 403);
 
-  // SUPERADMIN bypasa la validación de rol — entra sin importar la pestaña seleccionada
-  const isSuperAdmin = user.role === 'SUPERADMIN';
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) throw httpError('Credenciales incorrectas', 401);
 
-  if (!isSuperAdmin) {
-    if (user.role === 'CANDIDATO' && attemptedRole !== 'CANDIDATO')
-      throw makeError('Esta cuenta pertenece a un candidato. Selecciona la pestaña correcta.', 401);
-
-    if (user.role === 'EMPRESA' && attemptedRole !== 'EMPRESA')
-      throw makeError('Esta cuenta pertenece a una empresa. Selecciona la pestaña correcta.', 401);
+  // SUPERADMIN ignora el tipo de pestaña
+  if (user.role !== 'SUPERADMIN') {
+    if (user.role === 'CANDIDATO' && attempted !== 'CANDIDATO')
+      throw httpError('Esta cuenta pertenece a un candidato. Selecciona la pestaña correcta.', 401);
+    if (user.role === 'EMPRESA' && attempted !== 'EMPRESA')
+      throw httpError('Esta cuenta pertenece a una empresa. Selecciona la pestaña correcta.', 401);
   }
 
   if (user.role === 'EMPRESA') {
-    if (!user.company_id)
-      throw makeError('Tu perfil de empresa no ha sido completado.', 403);
-    if (!user.company_verified)
-      throw makeError('Tu empresa está pendiente de verificación por el administrador.', 403);
+    if (!user.company) throw httpError('Tu perfil de empresa no ha sido completado.', 403);
+    if (!user.company.isVerified)
+      throw httpError('Tu empresa está pendiente de verificación por el administrador.', 403);
   }
 
-  const token = makeToken(user);
-  return {
-    token,
-    user: {
-      id:        user.id,
-      email:     user.email,
-      role:      user.role,
-      nombre:    user.nombre ?? user.name,
-      companyId: user.company_id ?? null,
-    },
-  };
+  const companyId = user.company?.id ?? null;
+  return { token: signToken(user, companyId), user: publicUser(user, companyId) };
 };
 
+// ─── REGISTRO CANDIDATO ─────────────────────────────────────────────
 export const registrarCandidato = async ({ email, password, nombre, apellidos }) => {
-  const { rows: existing } = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-  if (existing.length > 0) throw makeError('El email ya está registrado', 409);
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) throw httpError('El email ya está registrado', 409);
 
-  const hash = await bcrypt.hash(password, 12);
-  const { rows } = await pool.query(
-    `INSERT INTO users (email, password_hash, role, nombre, apellidos)
-     VALUES ($1, $2, 'CANDIDATO', $3, $4) RETURNING *`,
-    [email, hash, nombre, apellidos]
-  );
-  const user = rows[0];
-  return {
-    token: makeToken(user),
-    user: { id: user.id, email: user.email, role: user.role, nombre: user.nombre },
-  };
+  const passwordHash = await bcrypt.hash(password, 12);
+  const user = await prisma.user.create({
+    data: { email, passwordHash, role: 'CANDIDATO', nombre, apellidos },
+  });
+
+  return { token: signToken(user), user: publicUser(user) };
 };
 
-export const registrarEmpresa = async ({ email, password, nombre, empresaNombre, descripcion = '', ubicacion, industria, sitioWeb = null }) => {
-  const { rows: existing } = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-  if (existing.length > 0) throw makeError('El email ya está registrado', 409);
+// ─── REGISTRO EMPRESA (transacción) ─────────────────────────────────
+export const registrarEmpresa = async ({
+  email, password, nombre, empresaNombre,
+  descripcion = '', ubicacion, industria, sitioWeb = null,
+}) => {
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) throw httpError('El email ya está registrado', 409);
 
-  const hash = await bcrypt.hash(password, 12);
+  const passwordHash = await bcrypt.hash(password, 12);
 
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    const { rows: userRows } = await client.query(
-      `INSERT INTO users (email, password_hash, role, nombre, empresa_nombre)
-       VALUES ($1, $2, 'EMPRESA', $3, $4) RETURNING *`,
-      [email, hash, nombre, empresaNombre]
-    );
-    const user = userRows[0];
-    await client.query(
-      `INSERT INTO companies (user_id, nombre, descripcion, ubicacion, industria, sitio_web)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [user.id, empresaNombre, descripcion, ubicacion, industria, sitioWeb]
-    );
-    await client.query('COMMIT');
-    return { message: 'Empresa registrada. Espera verificación del administrador.' };
-  } catch (err) {
-    await client.query('ROLLBACK');
-    throw err;
-  } finally {
-    client.release();
-  }
+  await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        email,
+        passwordHash,
+        role: 'EMPRESA',
+        nombre,
+        empresaNombre,
+      },
+    });
+    await tx.company.create({
+      data: {
+        userId: user.id,
+        nombre: empresaNombre,
+        descripcion,
+        ubicacion,
+        industria,
+        sitioWeb,
+      },
+    });
+  });
+
+  return { message: 'Empresa registrada. Espera verificación del administrador.' };
 };

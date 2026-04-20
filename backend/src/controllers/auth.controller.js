@@ -1,23 +1,19 @@
-// backend/src/controllers/auth.controller.js
 import * as authService from '../services/auth.service.js';
 
 export const login = async (req, res, next) => {
   try {
-    const result = await authService.login(req.body);
-    res.json(result);
+    res.json(await authService.login(req.body));
   } catch (err) { next(err); }
 };
 
 export const registrarCandidato = async (req, res, next) => {
   try {
-    const result = await authService.registrarCandidato(req.body);
-    res.status(201).json(result);
+    res.status(201).json(await authService.registrarCandidato(req.body));
   } catch (err) { next(err); }
 };
 
 export const registrarEmpresa = async (req, res, next) => {
   try {
-    const result = await authService.registrarEmpresa(req.body);
-    res.status(201).json(result);
+    res.status(201).json(await authService.registrarEmpresa(req.body));
   } catch (err) { next(err); }
 };
