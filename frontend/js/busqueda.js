@@ -11,7 +11,10 @@ const sp = new URLSearchParams(location.search);
 const qParam  = sp.get('q') || '';
 const ubParam = sp.get('ubicacion') || '';
 if (qParam)  inputQ.value = qParam;
-if (ubParam) inputUbicacion.value = ubParam;
+if (ubParam) {
+  const opt = [...inputUbicacion.options].find(o => o.value === ubParam || o.text === ubParam);
+  if (opt) opt.selected = true;
+}
 
 // ── Search form ───────────────────────────────────────────────────────
 document.getElementById('searchForm').addEventListener('submit', (e) => {
