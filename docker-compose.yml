@@ -34,9 +34,9 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    # Sincroniza la base de datos automáticamente y luego levanta el servidor
-    command: >
-      sh -c "npx prisma db push && npm run dev"
+    # La migración y el seed se ejecutan DESDE EL HOST con Prisma.
+    # Ver DEPLOY.md (Paso 4). Aquí solo se levanta el servidor.
+    command: npm run dev
 
 volumes:
   postgres_data:
