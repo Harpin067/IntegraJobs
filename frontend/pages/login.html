@@ -9,79 +9,96 @@
     *, *::before, *::after { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
 
+    /* ── Layout split ── */
     .split-wrap {
       display: grid;
       grid-template-columns: 1fr 1fr;
       min-height: 100vh;
     }
 
-    /* ── Lado izquierdo: Brand ── */
+    /* ── Lado izquierdo: Marca ── */
     .split-brand {
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 3rem;
+      align-items: flex-start;
+      padding: 3.5rem;
       background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,86,219,.55) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 90% 110%, rgba(16,185,129,.25) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,86,219,.6) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 90% 110%, rgba(16,185,129,.28) 0%, transparent 60%),
         linear-gradient(160deg, #0b1640 0%, #0f2460 45%, #0d1f54 100%);
       color: #fff;
+      transition: background .4s ease;
     }
     .split-brand::before {
       content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.065) 1px, transparent 1px);
       background-size: 26px 26px;
       pointer-events: none;
     }
     .split-brand::after {
       content: '';
       position: absolute;
-      bottom: -100px; right: -100px;
-      width: 420px; height: 420px;
-      background: radial-gradient(circle, rgba(16,185,129,.18) 0%, transparent 70%);
+      bottom: -120px; right: -120px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(16,185,129,.2) 0%, transparent 68%);
       pointer-events: none;
+      transition: opacity .4s ease;
     }
-    .brand-content { position: relative; z-index: 2; max-width: 400px; }
-    .brand-logo {
-      margin-bottom: 2.5rem;
-      display: inline-block;
-    }
-    .brand-logo img { height: 48px; width: auto; }
-    .brand-logo .fallback {
-      display: none;
-      align-items: center;
-      gap: .625rem;
-    }
-    .brand-logo .fallback .ij-brand-icon { background: rgba(255,255,255,.15); color: #fff; }
-    .brand-logo .fallback span { font-size: 1.25rem; font-weight: 800; color: #fff; }
 
-    .brand-content h2 {
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
+    .brand-inner { position: relative; z-index: 2; max-width: 420px; }
+
+    .brand-logo { margin-bottom: 3rem; display: inline-block; }
+    .brand-logo img { height: 48px; width: auto; display: block; }
+    .brand-logo-fallback {
+      display: none; align-items: center; gap: .625rem;
+    }
+    .brand-logo-fallback .ij-brand-icon {
+      background: rgba(255,255,255,.15); color: #fff;
+    }
+    .brand-logo-fallback span { font-size: 1.25rem; font-weight: 800; color: #fff; }
+
+    .brand-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .35rem .875rem;
+      border-radius: 999px;
+      background: rgba(16,185,129,.18);
+      border: 1px solid rgba(16,185,129,.35);
+      color: #6ee7b7;
+      font-size: .8125rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+      transition: all .3s ease;
+    }
+
+    .brand-heading {
+      font-size: clamp(1.625rem, 2.5vw, 2.125rem);
       font-weight: 800;
       letter-spacing: -.025em;
       line-height: 1.2;
       color: #fff;
       margin-bottom: 1rem;
+      transition: opacity .25s ease;
     }
-    .brand-content p {
-      color: rgba(255,255,255,.65);
-      font-size: 1rem;
+    .brand-sub {
+      color: rgba(255,255,255,.6);
+      font-size: .9375rem;
       line-height: 1.7;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.75rem;
+      transition: opacity .25s ease;
     }
 
     .brand-stats {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
+      display: flex; gap: 2rem; flex-wrap: wrap;
     }
-    .brand-stat-item { display: flex; flex-direction: column; gap: .2rem; }
+    .brand-stat { display: flex; flex-direction: column; gap: .25rem; }
     .brand-stat-value { font-size: 1.5rem; font-weight: 800; color: #6ee7b7; }
-    .brand-stat-label { font-size: .75rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .06em; }
+    .brand-stat-label {
+      font-size: .6875rem; color: rgba(255,255,255,.5);
+      text-transform: uppercase; letter-spacing: .07em;
+    }
 
     /* ── Lado derecho: Form ── */
     .split-form {
@@ -89,109 +106,112 @@
       align-items: center;
       justify-content: center;
       padding: 3rem 2rem;
-      background: var(--color-surface);
+      background: #fff;
       overflow-y: auto;
     }
     .form-inner { width: 100%; max-width: 400px; }
 
-    .form-header { margin-bottom: 2rem; }
+    .form-header { margin-bottom: 1.875rem; }
     .form-header h1 {
-      font-size: 1.625rem;
-      font-weight: 800;
-      letter-spacing: -.02em;
-      margin-bottom: .375rem;
+      font-size: 1.625rem; font-weight: 800;
+      letter-spacing: -.02em; margin-bottom: .375rem;
     }
     .form-header p { color: var(--color-muted); font-size: .9375rem; }
 
-    /* Tabs */
-    .login-tabs {
+    /* Segmented control */
+    .seg-control {
       display: flex;
       background: var(--color-bg);
       border-radius: var(--radius-lg);
       padding: .25rem;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.875rem;
       gap: .25rem;
     }
-    .login-tabs button {
+    .seg-control button {
       flex: 1;
-      padding: .5rem;
+      padding: .5625rem .75rem;
       border: none;
       border-radius: var(--radius);
       background: transparent;
-      font-size: .875rem;
-      font-weight: 500;
+      font-size: .875rem; font-weight: 500;
       color: var(--color-muted);
       cursor: pointer;
       transition: background .15s, color .15s, box-shadow .15s;
     }
-    .login-tabs button.active {
+    .seg-control button.active {
       background: #fff;
       color: var(--color-primary);
-      font-weight: 600;
+      font-weight: 700;
       box-shadow: 0 1px 4px rgba(15,23,42,.1);
     }
 
-    /* Inputs premium */
-    .field { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.25rem; }
+    /* Inputs */
+    .field { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.125rem; }
     .field label { font-size: .875rem; font-weight: 600; color: var(--color-text); }
     .field input {
       padding: .875rem 1rem;
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-lg);
       font-size: .9375rem;
-      color: var(--color-text);
       background: var(--color-surface);
-      transition: border-color .15s, box-shadow .15s;
+      color: var(--color-text);
       outline: none;
+      transition: border-color .15s, box-shadow .15s;
       width: 100%;
     }
     .field input:focus {
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(26,86,219,.12);
+      box-shadow: 0 0 0 3px rgba(26,86,219,.11);
     }
 
-    .field-row {
+    .extras-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.75rem;
+      margin: .375rem 0 1.75rem;
     }
-    .checkbox-wrap {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      cursor: pointer;
+    .check-label {
+      display: flex; align-items: center; gap: .5rem; cursor: pointer;
     }
-    .checkbox-wrap input[type=checkbox] {
+    .check-label input[type=checkbox] {
       width: 1rem; height: 1rem;
-      accent-color: var(--color-primary);
-      cursor: pointer;
+      accent-color: var(--color-primary); cursor: pointer;
     }
-    .checkbox-wrap span { font-size: .875rem; color: var(--color-muted); }
-    .forgot-link { font-size: .875rem; color: var(--color-primary); }
-    .forgot-link:hover { color: var(--color-primary-dk); }
+    .check-label span { font-size: .875rem; color: var(--color-muted); }
+    .forgot { font-size: .875rem; color: var(--color-primary); }
+    .forgot:hover { color: var(--color-primary-dk); }
 
-    .submit-btn {
-      width: 100%;
-      padding: .9375rem;
-      background: var(--color-primary);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-lg);
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
+    /* Alert */
+    .form-alert {
+      display: none;
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      font-size: .875rem;
+      margin-bottom: 1.25rem;
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.22);
+      color: var(--color-danger);
+    }
+    .form-alert.show { display: block; }
+
+    /* Botón */
+    .login-btn {
+      width: 100%; padding: .9375rem;
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-lg);
+      font-size: 1rem; font-weight: 700; cursor: pointer;
       box-shadow: 0 4px 16px rgba(26,86,219,.35);
       transition: background .15s, transform .15s, box-shadow .15s;
       margin-bottom: 1.5rem;
     }
-    .submit-btn:hover:not(:disabled) {
+    .login-btn:hover:not(:disabled) {
       background: var(--color-primary-dk);
       transform: translateY(-1px);
       box-shadow: 0 8px 24px rgba(26,86,219,.4);
     }
-    .submit-btn:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .login-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
+    /* Footer links */
     .form-footer {
       text-align: center;
       font-size: .875rem;
@@ -201,25 +221,12 @@
     }
     .form-footer a { color: var(--color-primary); font-weight: 600; }
     .form-footer a:hover { color: var(--color-primary-dk); }
-    .form-footer .sep { margin: 0 .35rem; color: var(--color-border); }
+    .form-footer .sep { margin: 0 .4rem; color: var(--color-border); }
 
-    /* Alert */
-    .form-alert {
-      display: none;
-      padding: .75rem 1rem;
-      border-radius: var(--radius);
-      font-size: .875rem;
-      margin-bottom: 1.25rem;
-      background: rgba(239,68,68,.08);
-      border: 1px solid rgba(239,68,68,.25);
-      color: var(--color-danger);
-    }
-    .form-alert.visible { display: block; }
-
-    /* Mobile: apilado */
+    /* Mobile */
     @media (max-width: 768px) {
       .split-wrap { grid-template-columns: 1fr; }
-      .split-brand { padding: 2.5rem 1.5rem; min-height: 260px; }
+      .split-brand { padding: 2.25rem 1.5rem; min-height: 240px; }
       .brand-stats { gap: 1.5rem; }
       .split-form { padding: 2rem 1.25rem; align-items: flex-start; }
     }
@@ -229,32 +236,38 @@
 
 <div class="split-wrap">
 
-  <!-- ── Brand (izquierdo) ── -->
-  <div class="split-brand">
-    <div class="brand-content">
+  <!-- ── Marca ── -->
+  <div class="split-brand" id="brandPanel">
+    <div class="brand-inner">
 
       <div class="brand-logo">
         <img src="/img/logo.png" alt="IntegraJobs"
-             onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex'">
-        <div class="fallback" id="logo-fb">
-          <span class="ij-brand-icon" id="brand-icon"></span>
+             onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
+        <div class="brand-logo-fallback" id="logoFb">
+          <span class="ij-brand-icon" id="brandIcon"></span>
           <span>IntegraJobs</span>
         </div>
       </div>
 
-      <h2>Conecta con las mejores oportunidades de El Salvador</h2>
-      <p>Miles de vacantes reales, empresas verificadas y herramientas diseñadas para impulsar tu carrera profesional.</p>
+      <div class="brand-tag" id="brandTag">✦ Para Candidatos</div>
+
+      <h2 class="brand-heading" id="brandHeading">
+        Tu próxima oportunidad<br>te está esperando
+      </h2>
+      <p class="brand-sub" id="brandSub">
+        Accede a miles de vacantes reales, crea alertas personalizadas y postula con un solo clic.
+      </p>
 
       <div class="brand-stats">
-        <div class="brand-stat-item">
+        <div class="brand-stat">
           <span class="brand-stat-value">+20</span>
           <span class="brand-stat-label">Vacantes activas</span>
         </div>
-        <div class="brand-stat-item">
+        <div class="brand-stat">
           <span class="brand-stat-value">95%</span>
           <span class="brand-stat-label">Tasa de éxito</span>
         </div>
-        <div class="brand-stat-item">
+        <div class="brand-stat">
           <span class="brand-stat-value">48h</span>
           <span class="brand-stat-label">Respuesta media</span>
         </div>
@@ -263,7 +276,7 @@
     </div>
   </div>
 
-  <!-- ── Form (derecho) ── -->
+  <!-- ── Formulario ── -->
   <div class="split-form">
     <div class="form-inner">
 
@@ -272,17 +285,14 @@
         <p>Ingresa a tu cuenta para continuar</p>
       </div>
 
-      <!-- Tabs -->
-      <div class="login-tabs" id="loginTabs">
-        <button type="button" data-type="candidato" class="active">Candidato</button>
-        <button type="button" data-type="empresa">Empresa</button>
-        <button type="button" data-type="admin">Admin</button>
+      <!-- Segmented control (sin Admin) -->
+      <div class="seg-control" id="segControl">
+        <button type="button" data-role="CANDIDATO" class="active">Candidato</button>
+        <button type="button" data-role="EMPRESA">Empresa</button>
       </div>
 
-      <!-- Alert -->
       <div class="form-alert" id="alertEl"></div>
 
-      <!-- Form -->
       <form id="loginForm" novalidate>
         <div class="field">
           <label for="email">Correo electrónico</label>
@@ -297,15 +307,15 @@
                  autocomplete="current-password" required>
         </div>
 
-        <div class="field-row">
-          <label class="checkbox-wrap">
+        <div class="extras-row">
+          <label class="check-label">
             <input type="checkbox" id="remember">
             <span>Recordarme</span>
           </label>
-          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <button type="submit" class="submit-btn" id="btnSubmit">
+        <button type="submit" class="login-btn" id="btnSubmit">
           Iniciar sesión
         </button>
       </form>
@@ -324,8 +334,8 @@
 
 <script type="module">
   import { renderIcon } from '/js/icons.js';
-  const el = document.getElementById('brand-icon');
-  if (el) el.innerHTML = renderIcon('briefcase');
+  const ic = document.getElementById('brandIcon');
+  if (ic) ic.innerHTML = renderIcon('briefcase');
 </script>
 <script type="module" src="/js/pages/login.js"></script>
 </body>

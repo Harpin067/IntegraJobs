@@ -28,10 +28,10 @@ export const requireAuth = () => {
   return user;
 };
 
-export const login = async (email, password, loginType) => {
+export const login = async (email, password, attemptedRole) => {
   const data = await apiFetch('/auth/login', {
     method: 'POST',
-    body: JSON.stringify({ email, password, loginType }),
+    body: JSON.stringify({ email, password, attemptedRole }),
   });
   localStorage.setItem('token', data.token);
   localStorage.setItem('user', JSON.stringify(data.user));
