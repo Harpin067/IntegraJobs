@@ -17,7 +17,7 @@ const makeError = (msg, code) => {
   return err;
 };
 
-export const login = async ({ email, password, loginType }) => {
+export const login = async ({ email, password, attemptedRole }) => {
   const { rows } = await pool.query(
     `SELECT u.*, c.is_verified AS company_verified, c.id AS company_id
      FROM users u
@@ -33,11 +33,16 @@ export const login = async ({ email, password, loginType }) => {
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) throw makeError('Credenciales incorrectas', 401);
 
-  if (user.role === 'CANDIDATO' && loginType !== 'candidato')
-    throw makeError('Esta cuenta pertenece a un candidato. Usa la pestaña correcta.', 403);
+  // SUPERADMIN bypasa la validación de rol — entra sin importar la pestaña seleccionada
+  const isSuperAdmin = user.role === 'SUPERADMIN';
 
-  if (user.role === 'EMPRESA' && loginType !== 'empresa')
-    throw makeError('Esta cuenta pertenece a una empresa. Usa la pestaña correcta.', 403);
+  if (!isSuperAdmin) {
+    if (user.role === 'CANDIDATO' && attemptedRole !== 'CANDIDATO')
+      throw makeError('Esta cuenta pertenece a un candidato. Selecciona la pestaña correcta.', 401);
+
+    if (user.role === 'EMPRESA' && attemptedRole !== 'EMPRESA')
+      throw makeError('Esta cuenta pertenece a una empresa. Selecciona la pestaña correcta.', 401);
+  }
 
   if (user.role === 'EMPRESA') {
     if (!user.company_id)
