@@ -287,8 +287,8 @@
 
       <!-- Segmented control (sin Admin) -->
       <div class="seg-control" id="segControl">
-        <button type="button" data-role="CANDIDATO" class="active">Candidato</button>
-        <button type="button" data-role="EMPRESA">Empresa</button>
+        <button type="button" id="tab-candidato" data-role="CANDIDATO" class="active">Candidato</button>
+        <button type="button" id="tab-empresa" data-role="EMPRESA">Empresa</button>
       </div>
 
       <div class="form-alert" id="alertEl"></div>
@@ -315,7 +315,8 @@
           <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <button type="submit" class="login-btn" id="btnSubmit">
+        <input type="hidden" id="roleInput" name="role" value="CANDIDATO">
+        <button type="submit" class="login-btn" id="btn-submit">
           Iniciar sesión
         </button>
       </form>

@@ -5,50 +5,282 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Registro Candidato — IntegraJobs</title>
   <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    .split-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Lado izquierdo ── */
+    .split-brand {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3.5rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(16,185,129,.55) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 90% 110%, rgba(26,86,219,.25) 0%, transparent 60%),
+        linear-gradient(160deg, #052e16 0%, #064e2e 45%, #065f46 100%);
+      color: #fff;
+    }
+    .split-brand::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.065) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+    .split-brand::after {
+      content: '';
+      position: absolute;
+      bottom: -120px; right: -120px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(26,86,219,.18) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .brand-inner { position: relative; z-index: 2; max-width: 420px; }
+    .brand-logo { margin-bottom: 3rem; display: inline-block; }
+    .brand-logo img { height: 48px; width: auto; display: block; }
+    .brand-logo-fallback { display: none; align-items: center; gap: .625rem; }
+    .brand-logo-fallback .ij-brand-icon { background: rgba(255,255,255,.15); color: #fff; }
+    .brand-logo-fallback span { font-size: 1.25rem; font-weight: 800; color: #fff; }
+
+    .brand-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .35rem .875rem;
+      border-radius: 999px;
+      background: rgba(26,86,219,.2);
+      border: 1px solid rgba(26,86,219,.4);
+      color: #93c5fd;
+      font-size: .8125rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .brand-heading {
+      font-size: clamp(1.625rem, 2.5vw, 2.125rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .brand-sub {
+      color: rgba(255,255,255,.65);
+      font-size: .9375rem;
+      line-height: 1.7;
+      margin-bottom: 2.75rem;
+    }
+    .brand-steps { display: flex; flex-direction: column; gap: .875rem; }
+    .brand-step { display: flex; align-items: center; gap: .875rem; }
+    .brand-step-num {
+      width: 2rem; height: 2rem; flex-shrink: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8125rem; font-weight: 700; color: #6ee7b7;
+    }
+    .brand-step-text { font-size: .875rem; color: rgba(255,255,255,.75); }
+
+    /* ── Lado derecho ── */
+    .split-form {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: #fff;
+      overflow-y: auto;
+    }
+    .form-inner { width: 100%; max-width: 420px; padding: 2rem 0; }
+
+    .form-header { margin-bottom: 1.875rem; }
+    .form-header h1 {
+      font-size: 1.625rem; font-weight: 800;
+      letter-spacing: -.02em; margin-bottom: .375rem;
+    }
+    .form-header p { color: var(--color-muted); font-size: .9375rem; }
+
+    .field { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.125rem; }
+    .field label { font-size: .875rem; font-weight: 600; color: var(--color-text); }
+    .field input {
+      padding: .875rem 1rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      font-size: .9375rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      width: 100%;
+    }
+    .field input:focus {
+      border-color: #10B981;
+      box-shadow: 0 0 0 3px rgba(16,185,129,.12);
+    }
+    .field-hint { font-size: .8125rem; color: var(--color-muted); margin-top: .25rem; }
+
+    .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-alert {
+      display: none;
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      font-size: .875rem;
+      margin-bottom: 1.25rem;
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.22);
+      color: var(--color-danger);
+    }
+    .form-alert.show { display: block; }
+
+    .register-btn {
+      width: 100%; padding: .9375rem;
+      background: #10B981; color: #fff;
+      border: none; border-radius: var(--radius-lg);
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(16,185,129,.35);
+      transition: background .15s, transform .15s, box-shadow .15s;
+      margin-bottom: 1.5rem;
+    }
+    .register-btn:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(16,185,129,.4);
+    }
+    .register-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .form-footer {
+      text-align: center;
+      font-size: .875rem;
+      color: var(--color-muted);
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border-2);
+    }
+    .form-footer a { color: #10B981; font-weight: 600; }
+    .form-footer a:hover { color: #059669; }
+
+    @media (max-width: 768px) {
+      .split-wrap { grid-template-columns: 1fr; }
+      .split-brand { padding: 2.25rem 1.5rem; min-height: 220px; }
+      .split-form { padding: 2rem 1.25rem; }
+      .fields-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <div class="ij-auth-wrap">
-    <div class="ij-auth-card" style="max-width:460px">
-      <div class="ij-auth-brand"><a href="/">IntegraJobs</a></div>
 
-      <div class="ij-card">
-        <div class="ij-card-body">
-          <h5 class="ij-text-lg ij-font-bold ij-mb-1" style="text-align:center">Registro — Candidato</h5>
-          <p class="ij-text-xs ij-text-muted ij-mb-4" style="text-align:center">Crea tu cuenta para postular a empleos</p>
+<div class="split-wrap">
 
-          <div id="alert" class="ij-alert ij-alert-error ij-hidden ij-mb-3"></div>
-          <div id="success" class="ij-alert ij-alert-success ij-hidden ij-mb-3"></div>
+  <!-- ── Marca ── -->
+  <div class="split-brand">
+    <div class="brand-inner">
 
-          <form id="registroForm">
-            <div class="ij-grid ij-gap-3" style="grid-template-columns:1fr 1fr">
-              <div class="ij-form-group">
-                <label class="ij-label">Nombre <span class="ij-required">*</span></label>
-                <input type="text" id="nombre" class="ij-input" required>
-              </div>
-              <div class="ij-form-group">
-                <label class="ij-label">Apellidos <span class="ij-required">*</span></label>
-                <input type="text" id="apellidos" class="ij-input" required>
-              </div>
-            </div>
-            <div class="ij-form-group">
-              <label class="ij-label">Correo electrónico <span class="ij-required">*</span></label>
-              <input type="email" id="email" class="ij-input" required autocomplete="email">
-            </div>
-            <div class="ij-form-group">
-              <label class="ij-label">Contraseña <span class="ij-required">*</span></label>
-              <input type="password" id="password" class="ij-input" required minlength="8" autocomplete="new-password">
-              <span class="ij-text-xs ij-text-muted-2">Mínimo 8 caracteres.</span>
-            </div>
-            <button type="submit" class="ij-btn ij-btn-primary ij-btn-block ij-mt-2" id="btnSubmit">Crear cuenta</button>
-          </form>
+      <div class="brand-logo">
+        <img src="/img/logo.png" alt="IntegraJobs"
+             onerror="this.style.display='none';document.getElementById('logoFb').style.display='flex'">
+        <div class="brand-logo-fallback" id="logoFb">
+          <span class="ij-brand-icon" id="brandIcon"></span>
+          <span>IntegraJobs</span>
         </div>
       </div>
 
-      <p class="ij-text-xs ij-text-muted ij-mt-4" style="text-align:center">
-        ¿Ya tienes cuenta? <a href="/pages/login.html">Inicia sesión</a>
+      <div class="brand-tag">✦ Para Candidatos</div>
+
+      <h2 class="brand-heading">
+        Impulsa tu carrera<br>hacia el siguiente nivel
+      </h2>
+      <p class="brand-sub">
+        Crea tu perfil en minutos, postula a miles de vacantes reales y recibe respuesta en 48 horas.
       </p>
+
+      <div class="brand-steps">
+        <div class="brand-step">
+          <div class="brand-step-num">1</div>
+          <div class="brand-step-text">Crea tu cuenta gratis en menos de 2 minutos</div>
+        </div>
+        <div class="brand-step">
+          <div class="brand-step-num">2</div>
+          <div class="brand-step-text">Explora vacantes y postula con un solo clic</div>
+        </div>
+        <div class="brand-step">
+          <div class="brand-step-num">3</div>
+          <div class="brand-step-text">Recibe notificaciones y gestiona tus entrevistas</div>
+        </div>
+      </div>
+
     </div>
   </div>
-  <script type="module" src="/js/pages/registro-candidato.js"></script>
+
+  <!-- ── Formulario ── -->
+  <div class="split-form">
+    <div class="form-inner">
+
+      <div class="form-header">
+        <h1>Crea tu cuenta</h1>
+        <p>Únete a miles de candidatos que ya encontraron empleo</p>
+      </div>
+
+      <div class="form-alert" id="alertEl"></div>
+
+      <form id="registroForm" novalidate>
+
+        <div class="fields-row">
+          <div class="field">
+            <label for="nombre">Nombre <span style="color:var(--color-danger)">*</span></label>
+            <input type="text" id="nombre" name="nombre" placeholder="Juan" autocomplete="given-name" required>
+          </div>
+          <div class="field">
+            <label for="apellidos">Apellidos <span style="color:var(--color-danger)">*</span></label>
+            <input type="text" id="apellidos" name="apellidos" placeholder="Pérez García" autocomplete="family-name" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Correo electrónico <span style="color:var(--color-danger)">*</span></label>
+          <input type="email" id="email" name="email" placeholder="tu@correo.com" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="telefono">Teléfono <span style="color:var(--color-muted);font-weight:400">(opcional)</span></label>
+          <input type="tel" id="telefono" name="telefono" placeholder="+503 7000-0000" autocomplete="tel">
+        </div>
+
+        <div class="field">
+          <label for="password">Contraseña <span style="color:var(--color-danger)">*</span></label>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" required minlength="8">
+          <span class="field-hint">Mínimo 8 caracteres.</span>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirmar contraseña <span style="color:var(--color-danger)">*</span></label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" autocomplete="new-password" required>
+        </div>
+
+        <button type="submit" class="register-btn" id="btn-submit">
+          Crear cuenta gratis
+        </button>
+      </form>
+
+      <div class="form-footer">
+        ¿Ya tienes cuenta? <a href="/pages/login.html?type=candidato">Inicia sesión</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { renderIcon } from '/js/icons.js';
+  const ic = document.getElementById('brandIcon');
+  if (ic) ic.innerHTML = renderIcon('user');
+</script>
+<script type="module" src="/js/pages/registro-candidato.js"></script>
 </body>
 </html>
