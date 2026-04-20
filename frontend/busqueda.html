@@ -74,7 +74,24 @@
         <div class="search-bar">
           <input type="text" name="q" id="inputQ" placeholder="Cargo, empresa o habilidad..." aria-label="Buscar">
           <div class="sep"></div>
-          <input type="text" name="ubicacion" id="inputUbicacion" placeholder="📍 Ubicación..." aria-label="Ubicación" style="flex:.5">
+          <select name="ubicacion" id="inputUbicacion" aria-label="Departamento"
+                  style="flex:.5;min-width:0;border:none;outline:none;padding:.75rem 1rem;font-size:.9375rem;color:var(--color-text);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.25rem">
+            <option value="">📍 Todo El Salvador</option>
+            <option>Ahuachapán</option>
+            <option>Cabañas</option>
+            <option>Chalatenango</option>
+            <option>Cuscatlán</option>
+            <option>La Libertad</option>
+            <option>La Paz</option>
+            <option>La Unión</option>
+            <option>Morazán</option>
+            <option>San Miguel</option>
+            <option>San Salvador</option>
+            <option>San Vicente</option>
+            <option>Santa Ana</option>
+            <option>Sonsonate</option>
+            <option>Usulután</option>
+          </select>
           <button type="submit">Buscar</button>
         </div>
       </form>
