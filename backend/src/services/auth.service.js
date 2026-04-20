@@ -81,7 +81,7 @@ export const registrarCandidato = async ({ email, password, nombre, apellidos })
   };
 };
 
-export const registrarEmpresa = async ({ email, password, nombre, empresaNombre, descripcion, ubicacion, industria }) => {
+export const registrarEmpresa = async ({ email, password, nombre, empresaNombre, descripcion = '', ubicacion, industria, sitioWeb = null }) => {
   const { rows: existing } = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
   if (existing.length > 0) throw makeError('El email ya está registrado', 409);
 
@@ -97,9 +97,9 @@ export const registrarEmpresa = async ({ email, password, nombre, empresaNombre,
     );
     const user = userRows[0];
     await client.query(
-      `INSERT INTO companies (user_id, nombre, descripcion, ubicacion, industria)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [user.id, empresaNombre, descripcion, ubicacion, industria]
+      `INSERT INTO companies (user_id, nombre, descripcion, ubicacion, industria, sitio_web)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [user.id, empresaNombre, descripcion, ubicacion, industria, sitioWeb]
     );
     await client.query('COMMIT');
     return { message: 'Empresa registrada. Espera verificación del administrador.' };
