@@ -1,5 +1,6 @@
 // backend/src/services/vacantes.service.js
 import { pool } from '../db/db.js';
+import crypto from 'crypto';
 
 const makeError = (msg, code) => {
   const err = new Error(msg);
@@ -11,9 +12,9 @@ export const listar = async ({ tipoTrabajo, tipoContrato, experiencia, ubicacion
   const conditions = [`v.status = 'activa'`, `v.is_approved = true`];
   const params = [];
 
-  if (tipoTrabajo)  { params.push(tipoTrabajo);  conditions.push(`v.tipo_trabajo = $${params.length}::tipo_trabajo`); }
-  if (tipoContrato) { params.push(tipoContrato); conditions.push(`v.tipo_contrato = $${params.length}::tipo_contrato`); }
-  if (experiencia)  { params.push(experiencia);  conditions.push(`v.experiencia = $${params.length}::experiencia_enum`); }
+  if (tipoTrabajo)  { params.push(tipoTrabajo);  conditions.push(`v.tipo_trabajo = $${params.length}::"TipoTrabajo"`); }
+  if (tipoContrato) { params.push(tipoContrato); conditions.push(`v.tipo_contrato = $${params.length}::"TipoContrato"`); }
+  if (experiencia)  { params.push(experiencia);  conditions.push(`v.experiencia = $${params.length}::"Experiencia"`); }
   if (ubicacion)    { params.push(`%${ubicacion}%`); conditions.push(`v.ubicacion ILIKE $${params.length}`); }
   if (q)            { params.push(`%${q}%`);     conditions.push(`(v.titulo ILIKE $${params.length} OR v.descripcion ILIKE $${params.length})`); }
 
@@ -50,15 +51,29 @@ export const detalle = async (id) => {
 };
 
 export const crear = async (companyId, data) => {
+  // Generamos el UUID nativamente en Node.js
+  const nuevoId = crypto.randomUUID();
+
   const { rows } = await pool.query(
     `INSERT INTO vacancies
-       (company_id, titulo, descripcion, requisitos, ubicacion,
-        tipo_trabajo, tipo_contrato, experiencia, contacto, salario_min, salario_max)
-     VALUES ($1,$2,$3,$4,$5,$6::tipo_trabajo,$7::tipo_contrato,$8::experiencia_enum,$9,$10,$11)
+       (id, company_id, titulo, descripcion, requisitos, ubicacion,
+        tipo_trabajo, tipo_contrato, experiencia, contacto, salario_min, salario_max, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7::"TipoTrabajo", $8::"TipoContrato", $9::"Experiencia", $10, $11, $12, NOW())
      RETURNING *`,
-    [companyId, data.titulo, data.descripcion, data.requisitos, data.ubicacion,
-     data.tipoTrabajo, data.tipoContrato, data.experiencia, data.contacto,
-     data.salarioMin ?? null, data.salarioMax ?? null]
+    [
+      nuevoId, 
+      companyId, 
+      data.titulo, 
+      data.descripcion, 
+      data.requisitos, 
+      data.ubicacion,
+      data.tipoTrabajo, 
+      data.tipoContrato, 
+      data.experiencia, 
+      data.contacto,
+      data.salarioMin ?? null, 
+      data.salarioMax ?? null
+    ]
   );
   return rows[0];
 };
@@ -89,7 +104,7 @@ export const actualizar = async (id, companyId, data) => {
 
 export const cambiarStatus = async (id, companyId, status) => {
   const { rows } = await pool.query(
-    `UPDATE vacancies SET status = $1::vacancy_status, updated_at = NOW()
+    `UPDATE vacancies SET status = $1::"VacancyStatus", updated_at = NOW()
      WHERE id = $2 AND company_id = $3 RETURNING *`,
     [status, id, companyId]
   );

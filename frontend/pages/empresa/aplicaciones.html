@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatos | IntegraJobs</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fb; display: flex; }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0f172a, #1e3a8a);
+            color: white;
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 { color: #10B981; margin-bottom: 30px; }
+        .sidebar a { display: block; color: #cbd5f5; padding: 10px; text-decoration: none; border-radius: 8px; margin-bottom: 4px; }
+        .sidebar a:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        .main { flex: 1; padding: 30px; max-width: 800px; }
+        h1 { margin-top: 0; color: #111827; }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        .card h3 { margin: 0 0 6px; color: #111827; }
+        .card p { margin: 4px 0; color: #4b5563; font-size: 0.9rem; }
+
+        .cv-link {
+            display: inline-block;
+            background: #e5e7eb;
+            color: #111827;
+            padding: 0.3rem 0.8rem;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .sin-cv { color: #ef4444; font-size: 0.8rem; }
+
+        .estado-row { margin-top: 1rem; display: flex; align-items: center; gap: 10px; }
+        .estado-row label { font-size: 0.9rem; color: #374151; font-weight: 600; }
+        select { padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid #ccc; font-size: 0.9rem; }
+
+        .back-link { display: inline-block; margin-bottom: 20px; color: #1A56DB; text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>IntegraJobs</h2>
+        <a href="/pages/empresa/dashboard.html">Dashboard</a>
+        <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
+        <a href="/pages/empresa/crear-vacante.html">Publicar</a>
+        <a href="/pages/empresa/perfil.html">Perfil</a>
+        <a href="#" id="logoutBtn" style="margin-top:auto; color:#f87171;">Cerrar Sesión</a>
+    </div>
+
+    <div class="main">
+        <a href="/pages/empresa/vacantes.html" class="back-link">← Volver a Mis Vacantes</a>
+        <h1>Candidatos de la Vacante</h1>
+        <div id="aplicantesList">Cargando candidatos...</div>
+    </div>
+
+    <script type="module" src="/js/pages/empresa/aplicaciones.js"></script>
+    <script type="module">
+        import { logout } from '/js/auth.js';
+        document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+    </script>
+
+</body>
+</html>

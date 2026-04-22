@@ -1,17 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Perfil Empresa — IntegraJobs</title>
-  <link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<title>Perfil Empresa</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f7fb;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0f172a, #1e3a8a);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+}
+
+.sidebar a {
+  display: block;
+  color: #cbd5f5;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.sidebar a:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 40px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  max-width: 900px;
+  margin: auto;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.header img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+/* FORM */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+textarea {
+  grid-column: span 2;
+  min-height: 100px;
+}
+
+/* BUTTON */
+button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* LOGO */
+.logo-section {
+  margin-top: 30px;
+}
+
+</style>
 </head>
+
 <body>
-  <div id="ij-app">
-    <main id="ij-main" class="ij-main">
-      <div class="ij-content" id="page"></div>
-    </main>
+
+<div class="sidebar">
+  <h2>IntegraJobs</h2>
+  <a href="/pages/empresa/dashboard.html">Dashboard</a>
+  <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
+  <a href="/pages/empresa/crear-vacante.html">Publicar</a>
+  <a href="/pages/empresa/perfil.html">Perfil</a>
+  <a href="#" id="logoutBtn" style="margin-top:auto; color:#f87171;">Cerrar Sesión</a>
+</div>
+
+<div class="content">
+
+  <div class="card">
+
+    <div class="header">
+      <img id="currentLogo" src="" style="display:none;">
+      <div>
+        <h2 id="empresaNombre">Mi Empresa</h2>
+        <p>Gestiona tu perfil corporativo</p>
+      </div>
+    </div>
+
+    <form id="perfilForm">
+
+      <div class="form-grid">
+        <input id="nombre" placeholder="Nombre empresa">
+        <input id="industria" placeholder="Industria">
+
+        <input id="ubicacion" placeholder="Ubicación">
+        <input id="sitioWeb" placeholder="Sitio web">
+
+        <textarea id="descripcion" placeholder="Descripción de la empresa"></textarea>
+      </div>
+
+      <button>Guardar Cambios</button>
+      <p id="perfilMessage" style="color: #16a34a; margin-top: 10px;"></p>
+
+    </form>
+
+    <div class="logo-section">
+      <h3>Actualizar Logo</h3>
+      <form id="logoForm">
+        <input type="file" id="logoInput">
+        <button type="submit">Subir Logo</button>
+        <p id="logoMessage" style="color: #16a34a; margin-top: 10px;"></p>
+      </form>
+    </div>
+
   </div>
-  <script type="module" src="/js/pages/empresa/perfil.js"></script>
+
+</div>
+
+<script type="module" src="/js/pages/empresa/empresa-perfil.js"></script>
+<script type="module">
+  import { logout } from '/js/auth.js';
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+</script>
 </body>
 </html>

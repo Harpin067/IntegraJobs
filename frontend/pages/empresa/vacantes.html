@@ -1,17 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mis Vacantes — IntegraJobs</title>
-  <link rel="stylesheet" href="/css/theme.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Vacantes | IntegraJobs</title>
+    <link rel="stylesheet" href="/css/theme.css">
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fb; display: flex; }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0f172a, #1e3a8a);
+            color: white;
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h2 { color: #10B981; margin-bottom: 30px; }
+        .sidebar a { display: block; color: #cbd5f5; padding: 10px; text-decoration: none; border-radius: 8px; margin-bottom: 4px; }
+        .sidebar a:hover { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar .logout { margin-top: auto; color: #f87171; }
+
+        .main { flex: 1; padding: 30px; overflow: auto; }
+        .page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        h1 { margin-top: 0; color: #111827; }
+
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem; }
+        .card h3 { margin: 0 0 6px; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600;
+        }
+        .badge-activa   { background: #d1fae5; color: #065f46; }
+        .badge-pausada  { background: #fef3c7; color: #92400e; }
+        .badge-cerrada  { background: #fee2e2; color: #991b1b; }
+
+        .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .btn-sm { padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+        .btn-candidatos { background: #1A56DB; color: white; }
+        .btn-editar     { background: #f59e0b; color: white; }
+        .btn-pausar     { background: #6b7280; color: white; }
+        .btn-activar    { background: #10B981; color: white; }
+        .btn-cerrar     { background: #ef4444; color: white; }
+        .btn-sm:hover   { opacity: 0.85; }
+
+        .cv-link { display: inline-block; background: #e5e7eb; color: #111827; padding: 0.3rem 0.8rem; text-decoration: none; border-radius: 4px; margin-top: 0.5rem; font-size: 0.85rem; }
+        .sin-cv  { color: #ef4444; font-size: 0.8rem; }
+        select.status-select { padding: 0.4rem; border-radius: 4px; border: 1px solid #ccc; font-size: 0.85rem; }
+
+        /* Edit panel */
+        #editPanel { display: none; }
+        #editPanel h2 { margin-top: 0; }
+        .edit-form input,
+        .edit-form textarea,
+        .edit-form select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; font-size: 0.9rem; box-sizing: border-box; }
+        .edit-form textarea { min-height: 80px; }
+        .edit-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-guardar { background: #1A56DB; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-cancelar { background: #e5e7eb; color: #374151; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-left: 8px; }
+        #editMsg { margin-top: 10px; font-weight: 600; }
+    </style>
 </head>
 <body>
-  <div id="ij-app">
-    <main id="ij-main" class="ij-main">
-      <div class="ij-content" id="page"></div>
-    </main>
-  </div>
-  <script type="module" src="/js/pages/empresa/vacantes.js"></script>
+
+    <div class="sidebar">
+        <h2>IntegraJobs</h2>
+        <a href="/pages/empresa/dashboard.html">Dashboard</a>
+        <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
+        <a href="/pages/empresa/crear-vacante.html">Publicar</a>
+        <a href="/pages/empresa/perfil.html">Perfil</a>
+        <a href="#" id="logoutBtn" class="logout">Cerrar Sesión</a>
+    </div>
+
+    <div class="main">
+        <h1>Mis Vacantes y Candidatos</h1>
+
+        <div class="page-grid">
+
+            <!-- Columna izquierda: lista de vacantes -->
+            <div>
+                <h2>Mis Vacantes</h2>
+                <div id="vacantesList">Cargando vacantes...</div>
+            </div>
+
+            <!-- Columna derecha: candidatos o formulario edición -->
+            <div>
+                <!-- Panel candidatos -->
+                <div id="candidatosPanel">
+                    <h2 id="atsTitle">Candidatos</h2>
+                    <div id="aplicantesContainer">
+                        <p>Selecciona "Ver Candidatos" en una vacante.</p>
+                    </div>
+                </div>
+
+                <!-- Panel edición (oculto por defecto) -->
+                <div id="editPanel">
+                    <h2>Editar Vacante</h2>
+                    <form id="editForm" class="edit-form">
+                        <input  id="e_titulo"      placeholder="Título del puesto" required>
+                        <input  id="e_ubicacion"   placeholder="Ubicación" required>
+                        <textarea id="e_descripcion" placeholder="Descripción" required></textarea>
+                        <textarea id="e_requisitos"  placeholder="Requisitos" required></textarea>
+                        <div class="row">
+                            <select id="e_tipoTrabajo">
+                                <option value="remoto">Remoto</option>
+                                <option value="presencial">Presencial</option>
+                                <option value="hibrido">Híbrido</option>
+                            </select>
+                            <select id="e_tipoContrato">
+                                <option value="completo">Tiempo completo</option>
+                                <option value="medio">Medio tiempo</option>
+                                <option value="temporal">Temporal</option>
+                                <option value="freelance">Freelance</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <select id="e_experiencia">
+                                <option value="junior">Junior</option>
+                                <option value="mid">Mid</option>
+                                <option value="senior">Senior</option>
+                                <option value="lead">Lead</option>
+                            </select>
+                            <input id="e_contacto" placeholder="Email de contacto" required>
+                        </div>
+                        <div class="row">
+                            <input id="e_salarioMin" placeholder="Salario mínimo (opcional)">
+                            <input id="e_salarioMax" placeholder="Salario máximo (opcional)">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                            <button type="button" class="btn-cancelar" id="cancelEdit">Cancelar</button>
+                        </div>
+                        <p id="editMsg"></p>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="/js/pages/empresa/empresa-vacantes.js"></script>
+    <script type="module">
+        import { logout } from '/js/auth.js';
+        document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+    </script>
 </body>
 </html>

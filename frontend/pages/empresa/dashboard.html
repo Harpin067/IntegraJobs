@@ -1,17 +1,187 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel Empresa — IntegraJobs</title>
-  <link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<title>Dashboard Empresa</title>
+
+<link rel="stylesheet" href="/css/theme.css">
+
+<style>
+body {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    color: #111827;
+}
+
+/* LAYOUT */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    color: #10B981;
+}
+
+.sidebar a {
+    display: block;
+    margin: 15px 0;
+    color: white;
+    text-decoration: none;
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 30px;
+    background: #F9FAFB;
+}
+
+/* HEADER */
+.header {
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+/* CARDS */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.card span {
+    color: gray;
+}
+
+/* VACANTES */
+.vacantes {
+    margin-top: 30px;
+}
+
+.vacantes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.vacante-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    transition: 0.2s;
+}
+
+.vacante-card:hover {
+    transform: translateY(-5px);
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    background: #10B981;
+    color: white;
+}
+
+.btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #1A56DB;
+    color: white;
+    cursor: pointer;
+}
+</style>
+
 </head>
+
 <body>
-  <div id="ij-app">
-    <main id="ij-main" class="ij-main">
-      <div class="ij-content" id="page"></div>
-    </main>
-  </div>
-  <script type="module" src="/js/pages/empresa/dashboard.js"></script>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>IntegraJobs</h2>
+
+        <a href="/pages/empresa/dashboard.html">Dashboard</a>
+        <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
+        <a href="/pages/empresa/crear-vacante.html">Publicar</a>
+        <a href="/pages/empresa/perfil.html">Perfil</a>
+        <a href="#" id="logoutBtn" style="margin-top:auto; color:#f87171;">Cerrar Sesión</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <div class="header">
+            <h1>Panel de Empresa</h1>
+            <p>Controla tus vacantes y candidatos</p>
+        </div>
+
+        <!-- KPIs -->
+        <div class="stats">
+            <div class="card">
+                <h2 id="totalVacantes">0</h2>
+                <span>Vacantes publicadas</span>
+            </div>
+
+            <div class="card">
+                <h2 id="totalPostulantes">0</h2>
+                <span>Total postulantes</span>
+            </div>
+
+            <div class="card">
+                <h2 id="enProceso">0</h2>
+                <span>En proceso</span>
+            </div>
+
+            <div class="card">
+                <h2 id="contratados" style="color:#10B981">0</h2>
+                <span>Contratados</span>
+            </div>
+        </div>
+
+        <!-- VACANTES -->
+        <div class="vacantes">
+            <h2>Mis Vacantes</h2>
+            <div id="vacantesList" class="vacantes-grid"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="/js/pages/empresa/dashboard.js"></script>
+
 </body>
 </html>

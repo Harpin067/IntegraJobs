@@ -1,17 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nueva Vacante — IntegraJobs</title>
-  <link rel="stylesheet" href="/css/theme.css">
+<meta charset="UTF-8">
+<title>Publicar Vacante</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f7fb;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0f172a, #1e3a8a);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  display: block;
+  color: #cbd5f5;
+  padding: 10px;
+  text-decoration: none;
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 40px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  max-width: 900px;
+  margin: auto;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+input, textarea, select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+textarea {
+  grid-column: span 2;
+  min-height: 100px;
+}
+
+/* BUTTON */
+button {
+  margin-top: 20px;
+  padding: 14px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #22c55e, #2563eb);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+</style>
 </head>
+
 <body>
-  <div id="ij-app">
-    <main id="ij-main" class="ij-main">
-      <div class="ij-content" id="page"></div>
-    </main>
+
+<div class="sidebar">
+  <h2>IntegraJobs</h2>
+  <a href="/pages/empresa/dashboard.html">Dashboard</a>
+  <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
+  <a href="/pages/empresa/crear-vacante.html">Publicar</a>
+  <a href="/pages/empresa/perfil.html">Perfil</a>
+  <a href="#" id="logoutBtn" style="margin-top:auto; color:#f87171;">Cerrar Sesión</a>
+</div>
+
+<div class="content">
+
+  <div class="card">
+    <h2>Publicar Nueva Vacante</h2>
+
+    <form id="vacanteForm">
+
+      <div class="grid">
+
+        <input id="titulo" placeholder="Título del puesto">
+        <input id="ubicacion" placeholder="Ubicación">
+
+        <textarea id="descripcion" placeholder="Descripción"></textarea>
+        <textarea id="requisitos" placeholder="Requisitos"></textarea>
+
+        <select id="tipoTrabajo">
+          <option value="remoto">Remoto</option>
+          <option value="presencial">Presencial</option>
+          <option value="hibrido">Híbrido</option>
+        </select>
+
+        <select id="tipoContrato">
+          <option value="completo">Tiempo completo</option>
+          <option value="medio">Medio tiempo</option>
+        </select>
+
+        <select id="experiencia">
+          <option value="junior">Junior</option>
+          <option value="mid">Mid</option>
+          <option value="senior">Senior</option>
+        </select>
+
+        <input id="contacto" placeholder="Email contacto">
+        <input id="salarioMin" placeholder="Salario mínimo">
+        <input id="salarioMax" placeholder="Salario máximo">
+
+      </div>
+
+      <button>🚀 Publicar Vacante</button>
+      <p id="msg" style="margin-top: 12px; font-weight: bold;"></p>
+
+    </form>
   </div>
-  <script type="module" src="/js/pages/empresa/crear-vacante.js"></script>
+
+</div>
+
+<script type="module" src="/js/pages/empresa/crear-vacante.js"></script>
+<script type="module">
+  import { logout } from '/js/auth.js';
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+</script>
 </body>
 </html>

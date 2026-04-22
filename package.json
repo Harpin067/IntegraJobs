@@ -10,11 +10,11 @@
     "bcryptjs": "^3.0.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.0",
     "prisma": "^5.22.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^22.10.0"
+    "typescript": "^5.7.2"
   },
   "prisma": {
     "seed": "ts-node --esm prisma/seed.ts"

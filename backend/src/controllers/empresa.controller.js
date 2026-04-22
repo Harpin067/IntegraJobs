@@ -1,31 +1,123 @@
-// backend/src/controllers/empresa.controller.js
-import * as svc from '../services/empresa.service.js';
+import { empresaService } from '../services/empresa.service.js';
 
-export const getPerfil = async (req, res, next) => {
-  try { res.json(await svc.getPerfil(req.user.companyId)); }
-  catch (err) { next(err); }
-};
+export const empresaController = {
 
-export const actualizarPerfil = async (req, res, next) => {
-  try { res.json(await svc.actualizarPerfil(req.user.companyId, req.body)); }
-  catch (err) { next(err); }
-};
+    /* =========================
+       PERFIL
+    ========================= */
 
-export const misVacantes = async (req, res, next) => {
-  try { res.json(await svc.misVacantes(req.user.companyId)); }
-  catch (err) { next(err); }
-};
+    async getPerfil(req, res) {
+        const userId = req.user.sub || req.user.id;
 
-export const aplicacionesDeVacante = async (req, res, next) => {
-  try {
-    const data = await svc.aplicacionesDeVacante(req.params.vacancyId, req.user.companyId);
-    res.json(data);
-  } catch (err) { next(err); }
-};
+        if (!userId) {
+            return res.status(401).json({ error: 'Token inválido' });
+        }
 
-export const cambiarStatusAplicacion = async (req, res, next) => {
-  try {
-    const data = await svc.cambiarStatusAplicacion(req.params.applicationId, req.user.companyId, req.body.status);
-    res.json(data);
-  } catch (err) { next(err); }
+        const perfil = await empresaService.getEmpresaByUserId(userId);
+
+        if (!perfil) {
+            return res.status(404).json({ error: 'Empresa no encontrada' });
+        }
+
+        res.json(perfil);
+    },
+
+    async updatePerfil(req, res) {
+        try {
+            const userId = req.user.sub || req.user.id;
+            const data = await empresaService.updatePerfil(userId, req.body);
+
+            res.json({
+                message: 'Perfil actualizado con éxito',
+                data
+            });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    async uploadLogo(req, res) {
+        if (!req.file) {
+            return res.status(400).json({ error: 'Archivo requerido' });
+        }
+
+        const userId = req.user.sub || req.user.id;
+        const logoUrl = `/uploads/logos/${req.file.filename}`;
+
+        const empresa = await empresaService.updateLogo(userId, logoUrl);
+
+        res.json({
+            message: 'Logo actualizado con éxito',
+            logo_url: empresa.logo_url
+        });
+    },
+
+    /* =========================
+       VACANTES
+    ========================= */
+
+    async getMisVacantes(req, res) {
+        const userId = req.user.sub || req.user.id;
+        const vacantes = await empresaService.findVacantesByUserId(userId);
+        res.json(vacantes);
+    },
+
+    async createVacante(req, res) {
+        const userId = req.user.sub || req.user.id;
+
+        const empresa = await empresaService.getEmpresaByUserId(userId);
+
+        if (!empresa) {
+            return res.status(404).json({ error: 'Empresa no encontrada' });
+        }
+
+        const vacante = await empresaService.saveVacante(empresa.id, req.body);
+
+        res.status(201).json({
+            message: 'Vacante creada',
+            data: vacante
+        });
+    },
+
+    async updateVacante(req, res) {
+        const userId = req.user.sub || req.user.id;
+        const { id } = req.params;
+
+        const vacante = await empresaService.updateVacante(id, userId, req.body);
+
+        res.json({
+            message: 'Vacante actualizada',
+            data: vacante
+        });
+    },
+
+    /* =========================
+       ATS
+    ========================= */
+
+    async getAplicacionesPorVacante(req, res) {
+        const userId = req.user.sub || req.user.id;
+        const { id } = req.params;
+
+        const data = await empresaService.getPostulaciones(id, userId);
+
+        res.json(data);
+    },
+
+    async updateStatusAplicacion(req, res) {
+        const userId = req.user.sub || req.user.id;
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const data = await empresaService.updatePostulacionStatus(
+            id,
+            status,
+            userId
+        );
+
+        res.json({
+            message: 'Estado actualizado',
+            data
+        });
+    }
 };

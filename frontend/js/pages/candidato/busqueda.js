@@ -93,7 +93,9 @@ function renderCard(v) {
             <div class="ij-text-sm ij-font-semibold ij-mt-2" style="color:var(--color-secondary)">${formatSalario(v.salario_min, v.salario_max)}</div>
           </div>
           <div class="ij-flex-col ij-gap-2">
-            <button class="ij-btn ij-btn-primary ij-btn-sm" data-postular='${JSON.stringify({id:v.id,titulo:v.titulo})}'>
+            <button class="ij-btn ij-btn-primary ij-btn-sm"
+              data-vid="${escapeHtml(v.id)}"
+              data-vtitulo="${escapeHtml(v.titulo)}">
               Postularme
             </button>
           </div>
@@ -131,9 +133,9 @@ $('btnFiltro').addEventListener('click', cargar);
 $('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') cargar(); });
 
 results.addEventListener('click', (ev) => {
-  const b = ev.target.closest('[data-postular]');
+  const b = ev.target.closest('[data-vid]');
   if (!b) return;
-  currentVac = JSON.parse(b.dataset.postular);
+  currentVac = { id: b.dataset.vid, titulo: b.dataset.vtitulo };
   $('pmTitle').textContent = `Postular a: ${currentVac.titulo}`;
   $('pmMensaje').value = '';
   $('pmAlert').classList.add('ij-hidden');

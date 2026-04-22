@@ -1,5 +1,6 @@
 // backend/src/services/candidato.service.js
 import { pool } from '../db/db.js';
+import crypto from 'crypto';
 
 const makeError = (msg, code) => {
   const err = new Error(msg);
@@ -53,9 +54,9 @@ export const postular = async (userId, vacancyId, mensaje) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO applications (vacancy_id, user_id, cv_snapshot, mensaje)
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-      [vacancyId, userId, cvSnapshot, mensaje ?? null]
+      `INSERT INTO applications (id, vacancy_id, user_id, cv_snapshot, mensaje, updated_at)
+       VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
+      [crypto.randomUUID(), vacancyId, userId, cvSnapshot, mensaje ?? null]
     );
     return rows[0];
   } catch (err) {
