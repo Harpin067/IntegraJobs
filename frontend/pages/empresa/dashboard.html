@@ -1,187 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard Empresa</title>
-
-<link rel="stylesheet" href="/css/theme.css">
-
-<style>
-body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
-    color: #111827;
-}
-
-/* LAYOUT */
-.container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* SIDEBAR */
-.sidebar {
-    width: 240px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar h2 {
-    color: #10B981;
-}
-
-.sidebar a {
-    display: block;
-    margin: 15px 0;
-    color: white;
-    text-decoration: none;
-}
-
-/* MAIN */
-.main {
-    flex: 1;
-    padding: 30px;
-    background: #F9FAFB;
-}
-
-/* HEADER */
-.header {
-    margin-bottom: 30px;
-}
-
-.header h1 {
-    margin: 0;
-}
-
-/* CARDS */
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-}
-
-.card h2 {
-    margin: 0;
-    font-size: 28px;
-}
-
-.card span {
-    color: gray;
-}
-
-/* VACANTES */
-.vacantes {
-    margin-top: 30px;
-}
-
-.vacantes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.vacante-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    transition: 0.2s;
-}
-
-.vacante-card:hover {
-    transform: translateY(-5px);
-}
-
-.badge {
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    background: #10B981;
-    color: white;
-}
-
-.btn {
-    margin-top: 10px;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #1A56DB;
-    color: white;
-    cursor: pointer;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | IntegraJobs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ij-app.css">
 </head>
+<body class="bg-light">
 
-<body>
+<div class="d-flex">
 
-<div class="container">
+  <!-- Sidebar -->
+  <div style="width:230px;min-height:100vh;background:linear-gradient(180deg,#0f172a,#1e3a8a);flex-shrink:0" class="d-flex flex-column text-white">
+    <div class="p-3" style="border-bottom:1px solid rgba(255,255,255,.12)">
+      <div class="fw-bold fs-6" style="color:#10b981">IntegraJobs</div>
+      <small style="color:rgba(255,255,255,.5);font-size:.7rem">Panel Empresa</small>
+    </div>
+    <nav class="flex-grow-1 p-2">
+      <a href="/pages/empresa/dashboard.html" class="sidebar-link active d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-grid"></i> Dashboard</a>
+      <a href="/pages/empresa/vacantes.html"   class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-file-text"></i> Mis Vacantes</a>
+      <a href="/pages/empresa/crear-vacante.html" class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-plus-circle"></i> Publicar Vacante</a>
+      <a href="/pages/empresa/perfil.html"     class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-building"></i> Perfil</a>
+    </nav>
+    <div class="p-2" style="border-top:1px solid rgba(255,255,255,.12)">
+      <a href="#" id="logoutBtn" class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 text-danger"><i class="bi bi-box-arrow-left"></i> Cerrar Sesión</a>
+    </div>
+  </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h2>IntegraJobs</h2>
+  <!-- Contenido principal -->
+  <div class="flex-grow-1 p-4">
 
-        <a href="/pages/empresa/dashboard.html">Dashboard</a>
-        <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
-        <a href="/pages/empresa/crear-vacante.html">Publicar</a>
-        <a href="/pages/empresa/perfil.html">Perfil</a>
-        <a href="#" id="logoutBtn" style="margin-top:auto; color:#f87171;">Cerrar Sesión</a>
+    <div class="mb-4">
+      <h4 class="fw-bold mb-1">Panel de Empresa</h4>
+      <p class="text-muted mb-0">Resumen de tu actividad en IntegraJobs.</p>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
-
-        <div class="header">
-            <h1>Panel de Empresa</h1>
-            <p>Controla tus vacantes y candidatos</p>
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#e0e7ff"><i class="bi bi-file-text fs-4 text-primary"></i></div>
+              <div>
+                <div class="fs-3 fw-bold" id="totalVacantes">—</div>
+                <small class="text-muted">Vacantes publicadas</small>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <!-- KPIs -->
-        <div class="stats">
-            <div class="card">
-                <h2 id="totalVacantes">0</h2>
-                <span>Vacantes publicadas</span>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#fef3c7"><i class="bi bi-people fs-4 text-warning"></i></div>
+              <div>
+                <div class="fs-3 fw-bold" id="totalPostulantes">—</div>
+                <small class="text-muted">Total postulantes</small>
+              </div>
             </div>
-
-            <div class="card">
-                <h2 id="totalPostulantes">0</h2>
-                <span>Total postulantes</span>
-            </div>
-
-            <div class="card">
-                <h2 id="enProceso">0</h2>
-                <span>En proceso</span>
-            </div>
-
-            <div class="card">
-                <h2 id="contratados" style="color:#10B981">0</h2>
-                <span>Contratados</span>
-            </div>
+          </div>
         </div>
-
-        <!-- VACANTES -->
-        <div class="vacantes">
-            <h2>Mis Vacantes</h2>
-            <div id="vacantesList" class="vacantes-grid"></div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#d1fae5"><i class="bi bi-arrow-repeat fs-4 text-success"></i></div>
+              <div>
+                <div class="fs-3 fw-bold" id="enProceso">—</div>
+                <small class="text-muted">En proceso</small>
+              </div>
+            </div>
+          </div>
         </div>
-
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#d1fae5"><i class="bi bi-check-circle fs-4 text-success"></i></div>
+              <div>
+                <div class="fs-3 fw-bold text-success" id="contratados">—</div>
+                <small class="text-muted">Contratados</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- Vacantes recientes -->
+    <div class="card border-0 shadow-sm" style="border-radius:12px;overflow:hidden">
+      <div class="section-header d-flex align-items-center gap-2">
+        <i class="bi bi-file-text fs-5"></i>
+        <span class="fw-semibold">Mis Vacantes recientes</span>
+        <a href="/pages/empresa/crear-vacante.html" class="btn btn-sm ms-auto"
+           style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)">
+          <i class="bi bi-plus-lg"></i> Publicar nueva
+        </a>
+      </div>
+      <div class="card-body p-3">
+        <div id="vacantesList" class="row g-3">
+          <div class="col-12 text-center text-muted py-4">Cargando vacantes...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="/js/pages/empresa/dashboard.js"></script>
-
+<script type="module">
+  import { logout } from '/js/auth.js';
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+</script>
 </body>
 </html>

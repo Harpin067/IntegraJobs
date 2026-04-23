@@ -3,8 +3,13 @@ import { formatSalario, modalidadLabel, badgeForModalidad, contratoLabel, expLab
 
 const resultados  = document.getElementById('resultados');
 const resultCount = document.getElementById('resultCount');
-const inputQ         = document.getElementById('inputQ');
-const inputUbicacion = document.getElementById('inputUbicacion');
+const inputQ            = document.getElementById('inputQ');
+const inputUbicacion    = document.getElementById('inputUbicacion');
+const inputTipoTrabajo  = document.getElementById('inputTipoTrabajo');
+const inputTipoContrato = document.getElementById('inputTipoContrato');
+const inputExperiencia  = document.getElementById('inputExperiencia');
+const inputSalarioMin   = document.getElementById('inputSalarioMin');
+const inputSalarioMax   = document.getElementById('inputSalarioMax');
 
 // ── Leer params de URL y pre-rellenar inputs ─────────────────────────
 const sp = new URLSearchParams(location.search);
@@ -15,18 +20,33 @@ if (ubParam) {
   const opt = [...inputUbicacion.options].find(o => o.value === ubParam || o.text === ubParam);
   if (opt) opt.selected = true;
 }
+if (sp.get('tipoTrabajo')  && inputTipoTrabajo)  inputTipoTrabajo.value  = sp.get('tipoTrabajo');
+if (sp.get('tipoContrato') && inputTipoContrato) inputTipoContrato.value = sp.get('tipoContrato');
+if (sp.get('experiencia')  && inputExperiencia)  inputExperiencia.value  = sp.get('experiencia');
+if (sp.get('salarioMin')   && inputSalarioMin)   inputSalarioMin.value   = sp.get('salarioMin');
+if (sp.get('salarioMax')   && inputSalarioMax)   inputSalarioMax.value   = sp.get('salarioMax');
 
 // ── Search form ───────────────────────────────────────────────────────
 document.getElementById('searchForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const q  = inputQ.value.trim();
-  const ub = inputUbicacion.value.trim();
+  const filters = getFilters();
   const params = new URLSearchParams();
-  if (q)  params.set('q', q);
-  if (ub) params.set('ubicacion', ub);
+  Object.entries(filters).forEach(([k, v]) => { if (v) params.set(k, v); });
   history.pushState({}, '', '/busqueda.html' + (params.toString() ? `?${params}` : ''));
-  cargar(q, ub);
+  cargar(filters);
 });
+
+function getFilters() {
+  return {
+    q:            inputQ?.value.trim() || '',
+    ubicacion:    inputUbicacion?.value || '',
+    tipoTrabajo:  inputTipoTrabajo?.value || '',
+    tipoContrato: inputTipoContrato?.value || '',
+    experiencia:  inputExperiencia?.value || '',
+    salarioMin:   inputSalarioMin?.value || '',
+    salarioMax:   inputSalarioMax?.value || '',
+  };
+}
 
 // ── Logo / fallback ───────────────────────────────────────────────────
 const logoFallback = (nombre) =>
@@ -48,7 +68,7 @@ const renderCard = (v) => `
           <span class="ij-badge ${badgeForModalidad(v.tipo_trabajo)}">${modalidadLabel(v.tipo_trabajo)}</span>
         </div>
         <div class="ij-text-sm ij-text-muted-2" style="margin-bottom:.5rem">
-          ${escapeHtml(v.empresa_nombre ?? 'Empresa')} &nbsp;·&nbsp; 📍 ${escapeHtml(v.ubicacion)}
+          ${escapeHtml(v.empresa_nombre ?? 'Empresa')} &nbsp;·&nbsp; ${escapeHtml(v.ubicacion)}
         </div>
         <div class="ij-flex ij-gap-3 ij-items-center" style="flex-wrap:wrap">
           <span class="ij-text-sm ij-font-semibold" style="color:var(--color-secondary)">${formatSalario(v.salario_min, v.salario_max)}</span>
@@ -65,15 +85,14 @@ const renderCard = (v) => `
 `;
 
 // ── Fetch y render ────────────────────────────────────────────────────
-async function cargar(q, ubicacion) {
+async function cargar(filters = {}) {
   resultados.innerHTML = [1,2,3,4].map(() =>
     `<div class="result-card" style="min-height:80px;animation:ij-pulse 1.5s ease-in-out infinite;pointer-events:none"></div>`
   ).join('');
 
   try {
     const params = new URLSearchParams();
-    if (q)        params.set('q', q);
-    if (ubicacion) params.set('ubicacion', ubicacion);
+    Object.entries(filters).forEach(([k, v]) => { if (v) params.set(k, v); });
 
     const res = await fetch(`/api/public/vacantes?${params}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -86,7 +105,7 @@ async function cargar(q, ubicacion) {
     resultados.innerHTML = data.length
       ? data.map(renderCard).join('')
       : `<div style="text-align:center;padding:4rem 0;color:var(--color-muted)">
-           <div style="font-size:2.5rem;margin-bottom:1rem">🔍</div>
+           <div style="font-size:2.5rem;margin-bottom:1rem;color:#9ca3af"><i class="bi bi-search"></i></div>
            <p style="font-weight:600;margin-bottom:.5rem">No encontramos vacantes</p>
            <p class="ij-text-sm">Intenta con otros términos o deja el buscador en blanco para ver todas.</p>
          </div>`;
@@ -96,4 +115,12 @@ async function cargar(q, ubicacion) {
 }
 
 // Carga inicial con los params de la URL
-cargar(qParam, ubParam);
+cargar({
+  q:            qParam,
+  ubicacion:    ubParam,
+  tipoTrabajo:  sp.get('tipoTrabajo')  || '',
+  tipoContrato: sp.get('tipoContrato') || '',
+  experiencia:  sp.get('experiencia')  || '',
+  salarioMin:   sp.get('salarioMin')   || '',
+  salarioMax:   sp.get('salarioMax')   || '',
+});

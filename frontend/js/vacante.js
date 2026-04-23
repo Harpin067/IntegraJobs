@@ -25,7 +25,7 @@ async function cargar(vacanteId) {
       : 'Error al cargar la vacante. Intenta más tarde.';
     document.getElementById('mainContent').innerHTML =
       `<div class="detail-card" style="text-align:center;padding:3rem">
-         <div style="font-size:2.5rem;margin-bottom:1rem">😕</div>
+         <div style="font-size:2.5rem;margin-bottom:1rem;color:#9ca3af"><i class="bi bi-emoji-frown"></i></div>
          <p class="ij-font-semibold" style="margin-bottom:.5rem">${msg}</p>
          <a href="/busqueda.html" class="ij-btn ij-btn-primary" style="margin-top:1rem;display:inline-flex">← Ver empleos</a>
        </div>`;
@@ -54,7 +54,7 @@ function renderDetalle(v) {
           <h1 style="font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.375rem">${escapeHtml(v.titulo)}</h1>
           <div class="ij-text-sm ij-text-muted-2">
             <strong style="color:var(--color-text)">${escapeHtml(v.empresa_nombre ?? '')}</strong>
-            &nbsp;·&nbsp; 📍 ${escapeHtml(v.ubicacion)}
+            &nbsp;·&nbsp; ${escapeHtml(v.ubicacion)}
             &nbsp;·&nbsp; ${timeAgo(v.created_at)}
           </div>
         </div>
@@ -65,7 +65,7 @@ function renderDetalle(v) {
         <span class="pill">${contratoLabel(v.tipo_contrato)}</span>
         <span class="pill gray">${expLabel(v.experiencia)}</span>
         ${v.salario_min || v.salario_max
-          ? `<span class="pill green">💰 ${formatSalario(v.salario_min, v.salario_max)}</span>`
+          ? `<span class="pill green">${formatSalario(v.salario_min, v.salario_max)}</span>`
           : ''}
       </div>
 
@@ -97,9 +97,9 @@ function renderDetalle(v) {
       </div>
       ${v.empresa_descripcion ? `<p class="ij-text-sm ij-text-muted" style="line-height:1.6;margin-bottom:.75rem">${escapeHtml(v.empresa_descripcion)}</p>` : ''}
       <div class="ij-text-xs ij-text-muted-2" style="display:flex;flex-direction:column;gap:.375rem">
-        ${v.empresa_ubicacion ? `<span>📍 ${escapeHtml(v.empresa_ubicacion)}</span>` : ''}
-        ${v.empresa_industria ? `<span>🏭 ${escapeHtml(v.empresa_industria)}</span>` : ''}
-        ${v.empresa_sitio ? `<a href="${escapeHtml(v.empresa_sitio)}" target="_blank" rel="noopener" style="color:var(--color-primary)">🌐 Sitio web</a>` : ''}
+        ${v.empresa_ubicacion ? `<span>${escapeHtml(v.empresa_ubicacion)}</span>` : ''}
+        ${v.empresa_industria ? `<span>${escapeHtml(v.empresa_industria)}</span>` : ''}
+        ${v.empresa_sitio ? `<a href="${escapeHtml(v.empresa_sitio)}" target="_blank" rel="noopener" style="color:var(--color-primary)">Sitio web</a>` : ''}
       </div>
     </div>
 

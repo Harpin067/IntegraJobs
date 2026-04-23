@@ -1,101 +1,149 @@
 import { apiFetch } from '/js/api.js';
-import { mountShell } from '/js/shell.js';
-import { renderIcon } from '/js/icons.js';
-import { timeAgo, escapeHtml, initials } from '/js/helpers.js';
+import { requireAuth } from '/js/auth.js';
 
-const user = mountShell('SUPERADMIN');
-if (!user) throw new Error('Unauthorized');
+const user = requireAuth();
+if (!user || user.role !== 'SUPERADMIN') {
+  window.location.href = '/pages/login.html';
+  throw new Error('Unauthorized');
+}
 
-const page = document.getElementById('page');
-page.innerHTML = `
-  <div style="max-width:1200px;margin:0 auto" class="ij-flex-col ij-gap-4">
-    <div class="ij-flex ij-justify-between ij-items-center">
-      <div>
-        <h1 class="ij-text-xl ij-font-bold">Gestión de Usuarios</h1>
-        <p class="ij-text-sm ij-text-muted">Administra los accesos del sistema.</p>
-      </div>
-      <div class="ij-flex ij-gap-2">
-        <input id="q" class="ij-input ij-input-sm" placeholder="Buscar por nombre o email..." style="min-width:260px">
-        <select id="fRole" class="ij-select ij-select-sm">
-          <option value="">Todos los roles</option>
-          <option value="CANDIDATO">Candidatos</option>
-          <option value="EMPRESA">Empresas</option>
-          <option value="SUPERADMIN">Admins</option>
-        </select>
-      </div>
-    </div>
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
-    <div class="ij-card">
-      <div class="ij-card-body" id="list"><p class="ij-text-sm ij-text-muted">Cargando...</p></div>
-    </div>
-  </div>
-`;
+function fmt(d) {
+  return d ? new Date(d).toLocaleDateString('es-SV', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+}
 
-const $ = (id) => document.getElementById(id);
-const roleBadge = { CANDIDATO: 'ij-badge-blue', EMPRESA: 'ij-badge-emerald', SUPERADMIN: 'ij-badge-purple' };
-const roleLabel = { CANDIDATO: 'Candidato', EMPRESA: 'Empresa', SUPERADMIN: 'Admin' };
+function initials(nombre, apellidos) {
+  const n = (nombre ?? '')[0] ?? '';
+  const a = (apellidos ?? '')[0] ?? '';
+  return (n + a).toUpperCase() || '?';
+}
 
-let all = [];
+const ROLE_BADGE = {
+  CANDIDATO:  { bg: '#dbeafe', color: '#1e40af', label: 'Candidato' },
+  EMPRESA:    { bg: '#d1fae5', color: '#065f46', label: 'Empresa' },
+  SUPERADMIN: { bg: '#ede9fe', color: '#5b21b6', label: 'Admin' },
+};
+
+let allUsers = [];
 
 function render() {
-  const q = $('q').value.trim().toLowerCase();
-  const role = $('fRole').value;
-  const items = all.filter(u => {
-    if (role && u.role !== role) return false;
+  const q       = document.getElementById('q').value.trim().toLowerCase();
+  const role    = document.getElementById('fRole').value;
+  const estado  = document.getElementById('fEstado').value;
+
+  const items = allUsers.filter(u => {
+    if (role   && u.role !== role) return false;
+    if (estado === 'activo'   && !u.is_active)  return false;
+    if (estado === 'inactivo' &&  u.is_active)  return false;
     if (q) {
-      const s = `${u.nombre ?? ''} ${u.apellidos ?? ''} ${u.email ?? ''} ${u.empresa_nombre ?? ''}`.toLowerCase();
-      if (!s.includes(q)) return false;
+      const hay = `${u.nombre ?? ''} ${u.apellidos ?? ''} ${u.email ?? ''} ${u.empresa_nombre ?? ''}`.toLowerCase();
+      if (!hay.includes(q)) return false;
     }
     return true;
   });
-  const ct = $('list');
-  if (!items.length) { ct.innerHTML = '<p class="ij-text-sm ij-text-muted" style="text-align:center;padding:1.5rem">Sin resultados.</p>'; return; }
+
+  document.getElementById('countBadge').textContent = items.length;
+
+  const ct = document.getElementById('usuariosList');
+
+  if (!items.length) {
+    ct.innerHTML = `
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-search fs-1 d-block mb-2 opacity-25"></i>
+        <div class="small">Sin resultados para los filtros aplicados.</div>
+      </div>`;
+    return;
+  }
+
   ct.innerHTML = `
-    <div class="ij-grid" style="grid-template-columns:2.5fr 1fr 1.5fr 1fr auto;gap:.5rem;padding:.5rem 0;border-bottom:1px solid var(--color-border-2)">
-      <span class="ij-text-xs ij-font-medium ij-text-muted-2" style="text-transform:uppercase">Usuario</span>
-      <span class="ij-text-xs ij-font-medium ij-text-muted-2" style="text-transform:uppercase">Rol</span>
-      <span class="ij-text-xs ij-font-medium ij-text-muted-2" style="text-transform:uppercase">Empresa</span>
-      <span class="ij-text-xs ij-font-medium ij-text-muted-2" style="text-transform:uppercase">Alta</span>
-      <span class="ij-text-xs ij-font-medium ij-text-muted-2" style="text-transform:uppercase;text-align:right">Acción</span>
-    </div>
-    ${items.map(u => `
-      <div class="ij-grid" style="grid-template-columns:2.5fr 1fr 1.5fr 1fr auto;align-items:center;gap:.5rem;padding:.75rem 0;border-top:1px solid var(--color-border-2)">
-        <div class="ij-flex ij-items-center ij-gap-3" style="min-width:0">
-          <div class="ij-avatar">${initials(`${u.nombre ?? ''} ${u.apellidos ?? ''}`)}</div>
-          <div style="min-width:0">
-            <div class="ij-text-sm ij-font-medium ij-truncate">${escapeHtml(`${u.nombre ?? ''} ${u.apellidos ?? ''}`.trim() || '—')}</div>
-            <div class="ij-text-xs ij-text-muted-2 ij-truncate">${escapeHtml(u.email ?? '')}</div>
-          </div>
-        </div>
-        <span class="ij-badge ${roleBadge[u.role] ?? 'ij-badge-blue'}">${roleLabel[u.role] ?? u.role}</span>
-        <span class="ij-text-sm ij-text-muted ij-truncate">${escapeHtml(u.empresa_nombre ?? '—')}</span>
-        <span class="ij-text-xs ij-text-muted-2">${timeAgo(u.created_at)}</span>
-        <div style="text-align:right">
-          ${u.role === 'SUPERADMIN' ? '<span class="ij-text-xs ij-text-muted-2">—</span>' : `
-            <button class="ij-btn ij-btn-sm ${u.is_active ? 'ij-btn-outline' : 'ij-btn-secondary'}" data-toggle="${u.id}">
-              ${u.is_active ? 'Desactivar' : 'Activar'}
-            </button>
-          `}
-        </div>
-      </div>
-    `).join('')}
-  `;
-  ct.querySelectorAll('[data-toggle]').forEach(b => {
-    b.addEventListener('click', async () => {
-      b.disabled = true;
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead style="background:#f8fafc">
+          <tr>
+            <th class="ps-4 py-3 small fw-semibold text-muted text-uppercase border-0">Usuario</th>
+            <th class="py-3 small fw-semibold text-muted text-uppercase border-0">Rol</th>
+            <th class="py-3 small fw-semibold text-muted text-uppercase border-0">Empresa</th>
+            <th class="py-3 small fw-semibold text-muted text-uppercase border-0">Estado</th>
+            <th class="py-3 small fw-semibold text-muted text-uppercase border-0">Alta</th>
+            <th class="pe-4 py-3 small fw-semibold text-muted text-uppercase border-0 text-end">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(u => {
+            const badge  = ROLE_BADGE[u.role] ?? ROLE_BADGE.CANDIDATO;
+            const nombre = `${u.nombre ?? ''} ${u.apellidos ?? ''}`.trim() || '—';
+            return `
+            <tr>
+              <td class="ps-4">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
+                       style="width:38px;height:38px;background:linear-gradient(135deg,#1e40af,#1e3a8a);font-size:.8rem">
+                    ${esc(initials(u.nombre, u.apellidos))}
+                  </div>
+                  <div>
+                    <div class="fw-semibold small">${esc(nombre)}</div>
+                    <div class="text-muted" style="font-size:.72rem">${esc(u.email ?? '')}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge px-2 py-1" style="background:${badge.bg};color:${badge.color};font-size:.72rem">
+                  ${badge.label}
+                </span>
+              </td>
+              <td class="small text-muted">${esc(u.empresa_nombre ?? '—')}</td>
+              <td>
+                ${u.is_active
+                  ? `<span class="badge px-2 py-1" style="background:#d1fae5;color:#065f46;font-size:.72rem"><i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Activo</span>`
+                  : `<span class="badge px-2 py-1" style="background:#fee2e2;color:#991b1b;font-size:.72rem"><i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Inactivo</span>`
+                }
+              </td>
+              <td class="small text-muted">${fmt(u.created_at)}</td>
+              <td class="pe-4 text-end">
+                ${u.role === 'SUPERADMIN'
+                  ? `<span class="text-muted small">—</span>`
+                  : `<button class="btn btn-sm ${u.is_active ? 'btn-outline-danger' : 'btn-outline-success'}"
+                             data-toggle="${esc(u.id)}">
+                       <i class="bi bi-${u.is_active ? 'slash-circle' : 'check-circle'} me-1"></i>
+                       ${u.is_active ? 'Desactivar' : 'Activar'}
+                     </button>`
+                }
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  ct.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
       try {
-        await apiFetch(`/admin/usuarios/${b.dataset.toggle}/toggle`, { method: 'PATCH' });
+        await apiFetch(`/admin/usuarios/${btn.dataset.toggle}/toggle`, { method: 'PATCH' });
         await load();
-      } catch { b.disabled = false; alert('Error al cambiar estado'); }
+      } catch (e) {
+        alert('Error: ' + e.message);
+        btn.disabled = false;
+      }
     });
   });
 }
 
 async function load() {
-  try { all = await apiFetch('/admin/usuarios'); render(); }
-  catch { $('list').innerHTML = '<div class="ij-alert ij-alert-error">Error al cargar usuarios.</div>'; }
+  try {
+    allUsers = await apiFetch('/admin/usuarios');
+    render();
+  } catch (e) {
+    document.getElementById('usuariosList').innerHTML = `
+      <div class="alert alert-danger m-3">Error al cargar usuarios: ${esc(e.message)}</div>`;
+  }
 }
 
-$('q').addEventListener('input', render);
-$('fRole').addEventListener('change', render);
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('fRole').addEventListener('change', render);
+document.getElementById('fEstado').addEventListener('change', render);
+
 load();

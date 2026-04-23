@@ -1,147 +1,177 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Publicar Vacante</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #f4f7fb;
-  display: flex;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 250px;
-  height: 100vh;
-  background: linear-gradient(180deg, #0f172a, #1e3a8a);
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar a {
-  display: block;
-  color: #cbd5f5;
-  padding: 10px;
-  text-decoration: none;
-}
-
-/* CONTENT */
-.content {
-  flex: 1;
-  padding: 40px;
-}
-
-/* CARD */
-.card {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  max-width: 900px;
-  margin: auto;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-input, textarea, select {
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  width: 100%;
-}
-
-textarea {
-  grid-column: span 2;
-  min-height: 100px;
-}
-
-/* BUTTON */
-button {
-  margin-top: 20px;
-  padding: 14px;
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #22c55e, #2563eb);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publicar Vacante | IntegraJobs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ij-app.css">
 </head>
+<body class="bg-light">
 
-<body>
+<div class="d-flex">
 
-<div class="sidebar">
-  <h2>IntegraJobs</h2>
-  <a href="/pages/empresa/dashboard.html">Dashboard</a>
-  <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
-  <a href="/pages/empresa/crear-vacante.html">Publicar</a>
-  <a href="/pages/empresa/perfil.html">Perfil</a>
-  <a href="#" id="logoutBtn" style="margin-top:auto; color:#f87171;">Cerrar Sesión</a>
-</div>
+  <!-- Sidebar -->
+  <div style="width:230px;min-height:100vh;background:linear-gradient(180deg,#0f172a,#1e3a8a);flex-shrink:0" class="d-flex flex-column text-white">
+    <div class="p-3" style="border-bottom:1px solid rgba(255,255,255,.12)">
+      <div class="fw-bold fs-6" style="color:#10b981">IntegraJobs</div>
+      <small style="color:rgba(255,255,255,.5);font-size:.7rem">Panel Empresa</small>
+    </div>
+    <nav class="flex-grow-1 p-2">
+      <a href="/pages/empresa/dashboard.html"    class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-grid"></i> Dashboard</a>
+      <a href="/pages/empresa/vacantes.html"      class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-file-text"></i> Mis Vacantes</a>
+      <a href="/pages/empresa/crear-vacante.html" class="sidebar-link active d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-plus-circle"></i> Publicar Vacante</a>
+      <a href="/pages/empresa/perfil.html"        class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-building"></i> Perfil</a>
+    </nav>
+    <div class="p-2" style="border-top:1px solid rgba(255,255,255,.12)">
+      <a href="#" id="logoutBtn" class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 text-danger"><i class="bi bi-box-arrow-left"></i> Cerrar Sesión</a>
+    </div>
+  </div>
 
-<div class="content">
+  <!-- Contenido -->
+  <div class="flex-grow-1 p-4" style="max-width:900px">
 
-  <div class="card">
-    <h2>Publicar Nueva Vacante</h2>
+    <!-- Encabezado -->
+    <div class="mb-4">
+      <h4 class="fw-bold mb-1">Publicar Nueva Vacante</h4>
+      <p class="text-muted mb-0 small">Completa los detalles del puesto para atraer a los mejores candidatos.</p>
+    </div>
 
     <form id="vacanteForm">
 
-      <div class="grid">
-
-        <input id="titulo" placeholder="Título del puesto">
-        <input id="ubicacion" placeholder="Ubicación">
-
-        <textarea id="descripcion" placeholder="Descripción"></textarea>
-        <textarea id="requisitos" placeholder="Requisitos"></textarea>
-
-        <select id="tipoTrabajo">
-          <option value="remoto">Remoto</option>
-          <option value="presencial">Presencial</option>
-          <option value="hibrido">Híbrido</option>
-        </select>
-
-        <select id="tipoContrato">
-          <option value="completo">Tiempo completo</option>
-          <option value="medio">Medio tiempo</option>
-        </select>
-
-        <select id="experiencia">
-          <option value="junior">Junior</option>
-          <option value="mid">Mid</option>
-          <option value="senior">Senior</option>
-        </select>
-
-        <input id="contacto" placeholder="Email contacto">
-        <input id="salarioMin" placeholder="Salario mínimo">
-        <input id="salarioMax" placeholder="Salario máximo">
-
+      <!-- Sección 1: Información principal -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius:12px;overflow:hidden">
+        <div class="card-header py-3 px-4 border-0"
+             style="background:linear-gradient(90deg,#0f172a,#1e3a8a)">
+          <div class="d-flex align-items-center gap-2 text-white">
+            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:28px;height:28px;background:rgba(255,255,255,.15);font-size:.8rem;font-weight:700">1</div>
+            <span class="fw-semibold">Información principal</span>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-7">
+              <label class="form-label fw-semibold small">Título del puesto <span class="text-danger">*</span></label>
+              <input id="titulo" class="form-control" placeholder="Ej. Desarrollador Full Stack Senior" required>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label fw-semibold small">Ubicación <span class="text-danger">*</span></label>
+              <input id="ubicacion" class="form-control" placeholder="Ej. San Salvador / Remoto" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Descripción del puesto <span class="text-danger">*</span></label>
+              <textarea id="descripcion" class="form-control" rows="5"
+                        placeholder="Describe las responsabilidades, el equipo, los beneficios y el día a día del rol..." required></textarea>
+              <div class="form-text">Sé específico: las mejores postulaciones vienen de descripciones claras.</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Requisitos <span class="text-danger">*</span></label>
+              <textarea id="requisitos" class="form-control" rows="4"
+                        placeholder="Habilidades técnicas, nivel de educación, años de experiencia requerida..." required></textarea>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <button>🚀 Publicar Vacante</button>
-      <p id="msg" style="margin-top: 12px; font-weight: bold;"></p>
+      <!-- Sección 2: Modalidad y condiciones -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius:12px;overflow:hidden">
+        <div class="card-header py-3 px-4 border-0"
+             style="background:linear-gradient(90deg,#0f172a,#1e3a8a)">
+          <div class="d-flex align-items-center gap-2 text-white">
+            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:28px;height:28px;background:rgba(255,255,255,.15);font-size:.8rem;font-weight:700">2</div>
+            <span class="fw-semibold">Modalidad y condiciones</span>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Modalidad <span class="text-danger">*</span></label>
+              <select id="tipoTrabajo" class="form-select">
+                <option value="remoto">Remoto</option>
+                <option value="presencial">Presencial</option>
+                <option value="hibrido">Híbrido</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Tipo de contrato <span class="text-danger">*</span></label>
+              <select id="tipoContrato" class="form-select">
+                <option value="completo">Tiempo completo</option>
+                <option value="medio">Medio tiempo</option>
+                <option value="temporal">Temporal</option>
+                <option value="freelance">Freelance</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Nivel de experiencia <span class="text-danger">*</span></label>
+              <select id="experiencia" class="form-select">
+                <option value="junior">Junior (0–2 años)</option>
+                <option value="mid">Mid (2–5 años)</option>
+                <option value="senior">Senior (5+ años)</option>
+                <option value="lead">Lead / Manager</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Email de contacto <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input id="contacto" class="form-control" placeholder="reclutamiento@empresa.com" type="email" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección 3: Compensación -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius:12px;overflow:hidden">
+        <div class="card-header py-3 px-4 border-0"
+             style="background:linear-gradient(90deg,#0f172a,#1e3a8a)">
+          <div class="d-flex align-items-center gap-2 text-white">
+            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:28px;height:28px;background:rgba(255,255,255,.15);font-size:.8rem;font-weight:700">3</div>
+            <span class="fw-semibold">Compensación <span style="font-weight:400;font-size:.8rem;opacity:.75">(opcional)</span></span>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <p class="text-muted small mb-3">
+            <i class="bi bi-info-circle me-1"></i>
+            Las vacantes con rango salarial visible reciben hasta un 40% más de postulaciones.
+          </p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Salario mínimo (USD)</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input id="salarioMin" class="form-control" placeholder="800" type="number" min="0">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Salario máximo (USD)</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input id="salarioMax" class="form-control" placeholder="1500" type="number" min="0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acción -->
+      <div class="d-flex align-items-center gap-3">
+        <button type="submit" class="btn btn-primary px-5 py-2">
+          <i class="bi bi-send me-2"></i> Publicar Vacante
+        </button>
+        <span id="msg" class="small fw-semibold"></span>
+      </div>
 
     </form>
-  </div>
 
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="/js/pages/empresa/crear-vacante.js"></script>
 <script type="module">
   import { logout } from '/js/auth.js';

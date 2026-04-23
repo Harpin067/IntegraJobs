@@ -30,12 +30,12 @@ document.getElementById('vacanteForm').addEventListener('submit', async (e) => {
             body: JSON.stringify(data)
         });
 
-        msg.style.color = '#16a34a';
-        msg.innerText = '✅ Vacante publicada. Pendiente de aprobación por un administrador.';
+        msg.className = 'small fw-semibold text-success';
+        msg.innerText = 'Vacante publicada. Pendiente de aprobación por un administrador.';
         e.target.reset();
 
     } catch (error) {
-        msg.style.color = '#dc2626';
-        msg.innerText = `❌ ${error.message}`;
+        msg.className = 'small fw-semibold text-danger';
+        msg.innerText = error.message;
     }
 });

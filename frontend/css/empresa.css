@@ -1,0 +1,238 @@
+/* IntegraJobs — Empresa module shared styles */
+@import url('/css/theme.css');
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.ej-wrap  { display: flex; min-height: 100vh; }
+.ej-main  { flex: 1; min-width: 0; background: var(--color-bg); overflow: auto; }
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.ej-sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.ej-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  padding: 1.25rem 1.25rem .75rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin-bottom: .5rem;
+}
+.ej-sidebar-brand-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(16,185,129,.18);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ej-sidebar-brand-icon svg { width: 18px; height: 18px; color: #10B981; }
+.ej-sidebar-brand-name { font-weight: 800; font-size: .9375rem; color: #10B981; letter-spacing: -.01em; }
+.ej-sidebar-brand-sub  { font-size: .625rem; color: #6ee7b7; opacity: .8; margin-top: 1px; }
+
+.ej-nav { display: flex; flex-direction: column; gap: 2px; padding: .25rem .75rem; flex: 1; }
+.ej-nav a {
+  display: flex; align-items: center; gap: .625rem;
+  padding: .625rem .875rem; border-radius: 8px;
+  font-size: .8125rem; font-weight: 500; color: #94a3b8;
+  text-decoration: none; transition: all .13s;
+}
+.ej-nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+.ej-nav a.active { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
+.ej-nav a svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+.ej-sidebar-footer {
+  padding: .75rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+  margin-top: auto;
+}
+.ej-sidebar-footer a {
+  display: flex; align-items: center; gap: .625rem;
+  font-size: .8125rem; color: #f87171; font-weight: 500; text-decoration: none;
+  padding: .5rem .875rem; border-radius: 8px; transition: background .13s;
+}
+.ej-sidebar-footer a:hover { background: rgba(248,113,113,.12); }
+
+/* ── Page header ─────────────────────────────────────────────── */
+.ej-page-header { padding: 1.5rem 2rem .5rem; border-bottom: 1px solid var(--color-border-2); }
+.ej-page-title  { font-size: 1.25rem; font-weight: 700; color: var(--color-text); }
+.ej-page-sub    { font-size: .8125rem; color: var(--color-muted); margin-top: 2px; }
+
+.ej-content     { padding: 1.5rem 2rem; }
+
+/* ── Cards ───────────────────────────────────────────────────── */
+.ej-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem;
+  transition: box-shadow .15s;
+}
+.ej-card:hover { box-shadow: var(--shadow); }
+
+/* ── Candidate card ──────────────────────────────────────────── */
+.ej-cand-header { display: flex; align-items: center; gap: .875rem; margin-bottom: .875rem; }
+.ej-cand-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+  flex-shrink: 0;
+}
+.ej-cand-avatar-ph {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--color-primary-10);
+  border: 2px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.375rem; flex-shrink: 0;
+  color: var(--color-primary);
+}
+.ej-cand-name  { font-size: .9375rem; font-weight: 700; color: var(--color-text); }
+.ej-cand-email { font-size: .8125rem; color: var(--color-muted); margin-top: 1px; }
+
+.ej-cand-meta { font-size: .8125rem; color: var(--color-muted); margin-bottom: .75rem; }
+.ej-cand-meta span { margin-right: 1rem; }
+
+/* ── Status badge ────────────────────────────────────────────── */
+.ej-badge {
+  display: inline-flex; align-items: center;
+  padding: .15rem .625rem; border-radius: 999px;
+  font-size: .6875rem; font-weight: 600;
+}
+.ej-badge-nuevo      { background: #DBEAFE; color: #1E40AF; }
+.ej-badge-en_proceso { background: #FEF3C7; color: #92400E; }
+.ej-badge-contratado { background: #D1FAE5; color: #065F46; }
+.ej-badge-rechazado  { background: #FEE2E2; color: #991B1B; }
+.ej-badge-activa     { background: #D1FAE5; color: #065F46; }
+.ej-badge-pausada    { background: #FEF3C7; color: #92400E; }
+.ej-badge-cerrada    { background: #F3F4F6; color: #374151; }
+
+/* ── CV actions ──────────────────────────────────────────────── */
+.ej-cv-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .875rem; }
+.ej-cv-btn {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .35rem .875rem; border-radius: var(--radius);
+  font-size: .8125rem; font-weight: 500; border: 1px solid var(--color-border);
+  background: #fff; color: var(--color-muted); cursor: pointer; text-decoration: none;
+  transition: all .12s;
+}
+.ej-cv-btn:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-10); }
+.ej-cv-btn-dl { color: var(--color-secondary); border-color: rgba(16,185,129,.35); }
+.ej-cv-btn-dl:hover { background: rgba(16,185,129,.07); border-color: var(--color-secondary); color: var(--color-secondary-dk); }
+.ej-sin-cv { font-size: .8125rem; color: var(--color-muted-2); font-style: italic; }
+
+/* ── Status select ───────────────────────────────────────────── */
+.ej-status-row { display: flex; align-items: center; gap: .625rem; padding-top: .875rem; border-top: 1px solid var(--color-border-2); }
+.ej-status-label { font-size: .8125rem; font-weight: 600; color: var(--color-muted); }
+.ej-status-select {
+  padding: .35rem .625rem; border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: .8125rem; font-family: inherit; background: #fff; color: var(--color-text);
+  cursor: pointer; transition: border-color .12s;
+}
+.ej-status-select:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-15); }
+
+/* ── Vacancy card (mis vacantes) ─────────────────────────────── */
+.ej-vac-stats { display: flex; gap: 1rem; margin: .5rem 0 .75rem; }
+.ej-vac-stat  { font-size: .8125rem; color: var(--color-muted); }
+.ej-vac-stat strong { color: var(--color-text); font-weight: 600; }
+.ej-vac-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.ej-vac-btn {
+  display: inline-flex; align-items: center; gap: .25rem;
+  padding: .35rem .875rem; border-radius: var(--radius); font-size: .8125rem;
+  font-weight: 600; border: none; cursor: pointer; transition: opacity .12s;
+}
+.ej-vac-btn:hover { opacity: .85; }
+.ej-vac-btn-blue   { background: var(--color-primary); color: #fff; }
+.ej-vac-btn-amber  { background: #F59E0B; color: #fff; }
+.ej-vac-btn-green  { background: var(--color-secondary); color: #fff; }
+.ej-vac-btn-gray   { background: #6B7280; color: #fff; }
+.ej-vac-btn-red    { background: var(--color-danger); color: #fff; }
+
+/* ── KPI stats (dashboard) ───────────────────────────────────── */
+.ej-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+@media (max-width: 900px) { .ej-kpis { grid-template-columns: repeat(2, 1fr); } }
+.ej-kpi  { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+           padding: 1.25rem; box-shadow: var(--shadow-sm); }
+.ej-kpi-val   { font-size: 2rem; font-weight: 800; color: var(--color-primary); letter-spacing: -.03em; line-height: 1; }
+.ej-kpi-label { font-size: .8125rem; color: var(--color-muted); margin-top: .25rem; }
+.ej-kpi-green .ej-kpi-val { color: var(--color-secondary); }
+
+/* ── Forms (perfil / crear vacante) ──────────────────────────── */
+.ej-form-wrap { max-width: 860px; }
+.ej-form-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-sm); padding: 1.75rem; margin-bottom: 1.25rem; }
+.ej-form-card-title { font-size: 1rem; font-weight: 700; margin-bottom: .25rem; }
+.ej-form-card-sub   { font-size: .8125rem; color: var(--color-muted); margin-bottom: 1.25rem; }
+.ej-form-divider    { height: 1px; background: var(--color-border-2); margin: 1.25rem 0; }
+
+.ej-field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1rem; }
+.ej-label { font-size: .75rem; font-weight: 600; color: #374151; }
+.ej-input, .ej-select, .ej-textarea {
+  width: 100%; padding: .5rem .75rem; border: 1px solid var(--color-border);
+  border-radius: var(--radius); font-family: inherit; font-size: .875rem;
+  color: var(--color-text); background: #fff; transition: border-color .12s, box-shadow .12s;
+}
+.ej-input:focus, .ej-select:focus, .ej-textarea:focus {
+  outline: none; border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-15);
+}
+.ej-input:disabled { background: #F9FAFB; cursor: not-allowed; color: var(--color-muted); }
+.ej-textarea { min-height: 90px; resize: vertical; }
+.ej-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 640px) { .ej-grid-2 { grid-template-columns: 1fr; } }
+
+.ej-btn-primary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .625rem 1.25rem; background: var(--color-primary); color: #fff;
+  border: none; border-radius: var(--radius); font-size: .875rem; font-weight: 600;
+  cursor: pointer; transition: background .12s;
+}
+.ej-btn-primary:hover { background: var(--color-primary-dk); }
+.ej-btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+
+.ej-btn-outline {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .5rem 1rem; background: #fff; color: var(--color-muted);
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: .875rem; font-weight: 500; cursor: pointer; transition: all .12s;
+}
+.ej-btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-10); }
+
+.ej-msg-ok  { font-size: .8125rem; color: #059669; font-weight: 500; margin-top: .5rem; }
+.ej-msg-err { font-size: .8125rem; color: var(--color-danger); font-weight: 500; margin-top: .5rem; }
+
+/* ── Back link ───────────────────────────────────────────────── */
+.ej-back { display: inline-flex; align-items: center; gap: .35rem;
+           font-size: .8125rem; color: var(--color-muted); text-decoration: none;
+           margin-bottom: 1.25rem; transition: color .12s; }
+.ej-back:hover { color: var(--color-primary); }
+
+/* ── Logo preview ────────────────────────────────────────────── */
+.ej-logo-preview {
+  width: 80px; height: 80px; border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border); object-fit: contain; display: none;
+}
+
+/* ── PDF Modal ───────────────────────────────────────────────── */
+.ej-modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,23,42,.65); z-index: 999;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.ej-modal-box {
+  background: #fff; border-radius: var(--radius-xl); overflow: hidden;
+  width: 100%; max-width: 900px; height: 88vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 25px 60px -10px rgba(15,23,42,.4);
+}
+.ej-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .875rem 1.25rem; border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+.ej-modal-title { font-size: .9375rem; font-weight: 700; }
+.ej-modal-actions { display: flex; gap: .5rem; }

@@ -11,6 +11,11 @@ export const toggleUsuario = async (req, res, next) => {
   catch (err) { next(err); }
 };
 
+export const listarEmpresas = async (req, res, next) => {
+  try { res.json(await svc.listarEmpresas()); }
+  catch (err) { next(err); }
+};
+
 export const empresasPendientes = async (req, res, next) => {
   try { res.json(await svc.empresasPendientes()); }
   catch (err) { next(err); }
@@ -28,5 +33,43 @@ export const vacantesPendientes = async (req, res, next) => {
 
 export const aprobarVacante = async (req, res, next) => {
   try { res.json(await svc.aprobarVacante(req.params.vacancyId, req.body.aprobar)); }
+  catch (err) { next(err); }
+};
+
+export const listarValoraciones = async (req, res, next) => {
+  try { res.json(await svc.listarValoraciones()); }
+  catch (err) { next(err); }
+};
+
+export const aprobarValoracion = async (req, res, next) => {
+  try { res.json(await svc.aprobarValoracion(req.params.reviewId, req.body.aprobar)); }
+  catch (err) { next(err); }
+};
+
+export const listarForoCategorias = async (req, res, next) => {
+  try { res.json(await svc.listarForoCategorias()); } catch (err) { next(err); }
+};
+
+export const crearForoCategoria = async (req, res, next) => {
+  try { res.json(await svc.crearForoCategoria(req.body.nombre, req.body.descripcion)); }
+  catch (err) { next(err); }
+};
+
+export const eliminarForoCategoria = async (req, res, next) => {
+  try { await svc.eliminarForoCategoria(req.params.categoryId); res.json({ ok: true }); }
+  catch (err) { next(err); }
+};
+
+export const listarForoThreads = async (req, res, next) => {
+  try { res.json(await svc.listarForoThreads()); } catch (err) { next(err); }
+};
+
+export const moderarThread = async (req, res, next) => {
+  try { res.json(await svc.moderarThread(req.params.threadId, req.body.aprobar)); }
+  catch (err) { next(err); }
+};
+
+export const eliminarThread = async (req, res, next) => {
+  try { await svc.eliminarThread(req.params.threadId); res.json({ ok: true }); }
   catch (err) { next(err); }
 };

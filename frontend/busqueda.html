@@ -55,8 +55,9 @@
     <ul>
       <li><a href="/">Inicio</a></li>
       <li><a href="/busqueda.html" style="color:var(--color-primary);font-weight:600">Empleos</a></li>
+      <li><a href="/pages/recursos.html">Recursos</a></li>
+      <li><a href="/pages/foros.html">Foros</a></li>
       <li><a href="/pages/login.html?type=empresa">Empresas</a></li>
-      <li><a href="/pages/registro-candidato.html">Candidatos</a></li>
     </ul>
     <div class="ij-flex ij-gap-2">
       <a href="/pages/login.html" class="ij-btn ij-btn-ghost ij-btn-sm">Iniciar sesión</a>
@@ -76,7 +77,7 @@
           <div class="sep"></div>
           <select name="ubicacion" id="inputUbicacion" aria-label="Departamento"
                   style="flex:.5;min-width:0;border:none;outline:none;padding:.75rem 1rem;font-size:.9375rem;color:var(--color-text);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.25rem">
-            <option value="">📍 Todo El Salvador</option>
+            <option value="">Todo El Salvador</option>
             <option>Ahuachapán</option>
             <option>Cabañas</option>
             <option>Chalatenango</option>
@@ -93,6 +94,36 @@
             <option>Usulután</option>
           </select>
           <button type="submit">Buscar</button>
+        </div>
+        <!-- Filtros avanzados -->
+        <div style="display:flex;gap:.75rem;margin-top:.875rem;flex-wrap:wrap">
+          <select id="inputTipoTrabajo"
+                  style="flex:1;min-width:140px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:.5rem;padding:.5rem .875rem;color:#fff;font-size:.875rem;cursor:pointer">
+            <option value="">Modalidad</option>
+            <option value="presencial">Presencial</option>
+            <option value="remoto">Remoto</option>
+            <option value="hibrido">Híbrido</option>
+          </select>
+          <select id="inputTipoContrato"
+                  style="flex:1;min-width:160px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:.5rem;padding:.5rem .875rem;color:#fff;font-size:.875rem;cursor:pointer">
+            <option value="">Tipo de contrato</option>
+            <option value="completo">Tiempo completo</option>
+            <option value="medio">Medio tiempo</option>
+            <option value="temporal">Temporal</option>
+            <option value="freelance">Freelance</option>
+          </select>
+          <select id="inputExperiencia"
+                  style="flex:1;min-width:140px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:.5rem;padding:.5rem .875rem;color:#fff;font-size:.875rem;cursor:pointer">
+            <option value="">Experiencia</option>
+            <option value="junior">Junior</option>
+            <option value="mid">Mid</option>
+            <option value="senior">Senior</option>
+            <option value="lead">Lead</option>
+          </select>
+          <input id="inputSalarioMin" type="number" placeholder="Salario mín. ($)" min="0"
+                 style="flex:1;min-width:130px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:.5rem;padding:.5rem .875rem;color:#fff;font-size:.875rem">
+          <input id="inputSalarioMax" type="number" placeholder="Salario máx. ($)" min="0"
+                 style="flex:1;min-width:130px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:.5rem;padding:.5rem .875rem;color:#fff;font-size:.875rem">
         </div>
       </form>
     </div>

@@ -8,9 +8,11 @@ const NAV = {
     brand: 'Portal Candidato',
     theme: '',
     links: [
-      { href: '/pages/candidato/dashboard.html', label: 'Dashboard', icon: 'dashboard' },
-      { href: '/pages/candidato/busqueda.html',  label: 'Búsqueda',  icon: 'search' },
-      { href: '/pages/candidato/perfil.html',    label: 'Mi Perfil', icon: 'user' },
+      { href: '/pages/candidato/dashboard.html', label: 'Dashboard',   icon: 'dashboard' },
+      { href: '/pages/candidato/busqueda.html',  label: 'Búsqueda',    icon: 'search' },
+      { href: '/pages/candidato/perfil.html',    label: 'Mi Perfil',   icon: 'user' },
+      { href: '/pages/candidato/alertas.html',   label: 'Alertas',     icon: 'bell' },
+      { href: '/pages/candidato/valoraciones.html', label: 'Valoraciones', icon: 'star' },
     ],
   },
   EMPRESA: {

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foros | IntegraJobs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ij-app.css">
+  <style>
+    @keyframes shimmer { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .skeleton { background:#e9ecef; border-radius:12px; animation:shimmer 1.5s ease-in-out infinite; }
+    .forum-card {
+      border-radius:12px;
+      transition:transform .15s,box-shadow .15s;
+      cursor:pointer;
+    }
+    .forum-card:hover {
+      transform:translateY(-2px);
+      box-shadow:0 8px 24px -6px rgba(26,86,219,.14) !important;
+    }
+    .thread-card {
+      border-radius:12px;
+      transition:transform .12s,box-shadow .12s;
+      cursor:pointer;
+    }
+    .thread-card:hover {
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px -4px rgba(26,86,219,.12) !important;
+    }
+    .avatar-circle {
+      width:2.25rem;height:2.25rem;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:.8125rem;flex-shrink:0;
+    }
+    .reply-box {
+      background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="d-flex" style="min-height:100vh">
+
+  <!-- Sidebar -->
+  <div style="width:230px;min-height:100vh;background:linear-gradient(180deg,#0f172a,#1e3a8a);flex-shrink:0" class="d-flex flex-column text-white">
+    <div class="p-3" style="border-bottom:1px solid rgba(255,255,255,.12)">
+      <div class="fw-bold fs-6" style="color:#10b981">IntegraJobs</div>
+      <small style="color:rgba(255,255,255,.5);font-size:.7rem">Portal Candidato</small>
+    </div>
+    <nav class="flex-grow-1 p-2">
+      <a href="/pages/candidato/dashboard.html"   class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-grid"></i> Dashboard</a>
+      <a href="/pages/candidato/busqueda.html"    class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-search"></i> Buscar Empleos</a>
+      <a href="/pages/candidato/perfil.html"      class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-person-circle"></i> Mi Perfil</a>
+      <a href="/pages/candidato/alertas.html"     class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-bell"></i> Alertas</a>
+      <a href="/pages/candidato/valoraciones.html" class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-star"></i> Valoraciones</a>
+      <a href="/pages/candidato/foros.html"       class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link active" style="color:rgba(255,255,255,.7)"><i class="bi bi-chat-square-text"></i> Foros</a>
+    </nav>
+    <div class="p-2" style="border-top:1px solid rgba(255,255,255,.12)">
+      <a href="#" id="logoutBtn" class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 text-danger sidebar-link"><i class="bi bi-box-arrow-left"></i> Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-grow-1 p-4">
+    <div style="max-width:860px;margin:0 auto">
+
+      <!-- Encabezado con breadcrumb -->
+      <div class="mb-4" id="pageHeader">
+        <h4 class="fw-bold mb-1">Foros de la comunidad</h4>
+        <p class="text-muted small mb-0">Intercambia experiencias y conecta con otros profesionales.</p>
+      </div>
+
+      <!-- ── Vista: categorías ── -->
+      <div id="viewCategories">
+        <div class="row g-3" id="categoryList">
+          <div class="col-md-6"><div class="skeleton" style="height:88px"></div></div>
+          <div class="col-md-6"><div class="skeleton" style="height:88px;animation-delay:.12s"></div></div>
+          <div class="col-md-6"><div class="skeleton" style="height:88px;animation-delay:.24s"></div></div>
+          <div class="col-md-6"><div class="skeleton" style="height:88px;animation-delay:.36s"></div></div>
+        </div>
+      </div>
+
+      <!-- ── Vista: hilos de una categoría ── -->
+      <div id="viewThreads" style="display:none">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm" id="backToCategories">
+              <i class="bi bi-arrow-left me-1"></i>Categorías
+            </button>
+            <h5 class="fw-bold mb-0" id="categoryTitle"></h5>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btnNuevoThread">
+            <i class="bi bi-plus-lg me-1"></i> Nuevo hilo
+          </button>
+        </div>
+        <div id="threadList"></div>
+      </div>
+
+      <!-- ── Vista: hilo individual ── -->
+      <div id="viewThread" style="display:none">
+        <div class="mb-3">
+          <button class="btn btn-outline-secondary btn-sm" id="backToThreads">
+            <i class="bi bi-arrow-left me-1"></i>Volver a hilos
+          </button>
+        </div>
+        <div id="threadDetail"></div>
+
+        <!-- Caja de respuesta -->
+        <div class="card border-0 shadow-sm mt-4" style="border-radius:12px;overflow:hidden">
+          <div class="section-header" style="border-radius:0">
+            <i class="bi bi-reply me-2"></i>Responder al hilo
+          </div>
+          <div class="card-body p-4">
+            <div id="replyAlert" class="alert alert-danger d-none mb-3 py-2 small"></div>
+            <textarea id="replyText" class="form-control mb-3" rows="4"
+                      placeholder="Comparte tu opinión o respuesta..."></textarea>
+            <div class="text-end">
+              <button id="btnEnviarReply" class="btn btn-primary">
+                <i class="bi bi-send me-1"></i> Publicar respuesta
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal: nuevo hilo -->
+<div id="modalThread" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1055;align-items:center;justify-content:center;padding:1rem">
+  <div class="card border-0 shadow-lg" style="max-width:560px;width:100%;border-radius:14px;overflow:hidden">
+    <div class="section-header" style="border-radius:0">
+      <i class="bi bi-chat-square-text me-2"></i>Crear nuevo hilo
+      <span class="ms-2 small fw-normal opacity-75" id="modalCategoryName"></span>
+    </div>
+    <div class="card-body p-4">
+      <div id="threadAlert" class="alert alert-danger d-none mb-3 py-2 small"></div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Título <span class="text-danger">*</span></label>
+        <input id="threadTitulo" class="form-control" placeholder="¿Sobre qué quieres debatir?">
+      </div>
+      <div class="mb-0">
+        <label class="form-label fw-semibold small">Contenido <span class="text-danger">*</span></label>
+        <textarea id="threadContenido" class="form-control" rows="5"
+                  placeholder="Explica tu tema o pregunta con detalle..."></textarea>
+      </div>
+    </div>
+    <div class="card-footer bg-white border-top d-flex justify-content-end gap-2 py-3">
+      <button id="cancelThread" class="btn btn-outline-secondary btn-sm">Cancelar</button>
+      <button id="submitThread" class="btn btn-primary btn-sm">
+        <i class="bi bi-send me-1"></i> Publicar hilo
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/pages/candidato/foros.js"></script>
+</body>
+</html>

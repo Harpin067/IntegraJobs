@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valoraciones | IntegraJobs Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ij-app.css">
+</head>
+<body class="bg-light">
+
+<div class="d-flex">
+
+  <!-- Sidebar -->
+  <div style="width:230px;min-height:100vh;background:linear-gradient(180deg,#0f172a,#1e3a8a);flex-shrink:0" class="d-flex flex-column text-white">
+    <div class="p-3" style="border-bottom:1px solid rgba(255,255,255,.12)">
+      <div class="fw-bold fs-6" style="color:#10b981">IntegraJobs</div>
+      <small style="color:rgba(255,255,255,.5);font-size:.7rem">Panel Administrador</small>
+    </div>
+    <nav class="flex-grow-1 p-2">
+      <a href="/pages/admin/dashboard.html"    class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-grid"></i> Dashboard</a>
+      <a href="/pages/admin/usuarios.html"     class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-people"></i> Usuarios</a>
+      <a href="/pages/admin/empresas.html"     class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-building"></i> Empresas</a>
+      <a href="/pages/admin/valoraciones.html" class="sidebar-link active d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-star"></i> Valoraciones</a>
+      <a href="/pages/admin/foros.html"        class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-chat-square-text"></i> Foros</a>
+    </nav>
+    <div class="p-2" style="border-top:1px solid rgba(255,255,255,.12)">
+      <a href="#" id="logoutBtn" class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 text-danger"><i class="bi bi-box-arrow-left"></i> Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-grow-1 p-4">
+
+    <div class="mb-4">
+      <h4 class="fw-bold mb-1">Moderación de Valoraciones</h4>
+      <p class="text-muted small mb-0">Aprueba o rechaza las reseñas que los candidatos dejan sobre las empresas.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body py-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#fef3c7"><i class="bi bi-hourglass-split fs-4 text-warning"></i></div>
+              <div>
+                <div class="fs-4 fw-bold text-warning" id="kpiPend">—</div>
+                <small class="text-muted">Pendientes</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body py-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#d1fae5"><i class="bi bi-check-circle fs-4 text-success"></i></div>
+              <div>
+                <div class="fs-4 fw-bold text-success" id="kpiAprobadas">—</div>
+                <small class="text-muted">Aprobadas</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body py-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2" style="background:#e0e7ff"><i class="bi bi-star-half fs-4 text-primary"></i></div>
+              <div>
+                <div class="fs-4 fw-bold text-primary" id="kpiTotal">—</div>
+                <small class="text-muted">Total valoraciones</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:12px">
+      <div class="card-body py-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-5">
+            <label class="form-label small fw-semibold mb-1">Buscar</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="text" id="q" class="form-control" placeholder="Empresa, candidato o comentario...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-semibold mb-1">Estado</label>
+            <select id="fEstado" class="form-select">
+              <option value="">Todas</option>
+              <option value="pendiente">Pendientes</option>
+              <option value="aprobada">Aprobadas</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small fw-semibold mb-1">Calificación</label>
+            <select id="fRating" class="form-select">
+              <option value="">Todas</option>
+              <option value="5">★★★★★ (5)</option>
+              <option value="4">★★★★ (4)</option>
+              <option value="3">★★★ (3)</option>
+              <option value="2">★★ (2)</option>
+              <option value="1">★ (1)</option>
+            </select>
+          </div>
+          <div class="col-md-2 text-end">
+            <span class="badge bg-secondary" id="countBadge">0</span> reseñas
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de valoraciones -->
+    <div class="card border-0 shadow-sm" style="border-radius:12px;overflow:hidden">
+      <div class="section-header d-flex align-items-center gap-2">
+        <i class="bi bi-star fs-5"></i>
+        <span class="fw-semibold">Todas las valoraciones</span>
+      </div>
+      <div class="card-body p-0" id="valoracionesList">
+        <div class="text-center text-muted py-5">
+          <div class="spinner-border spinner-border-sm mb-2" role="status"></div>
+          <div class="small">Cargando valoraciones...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/pages/admin/valoraciones.js"></script>
+<script type="module">
+  import { logout } from '/js/auth.js';
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+</script>
+</body>
+</html>

@@ -4,16 +4,17 @@ import path from 'path';
 import fs from 'fs';
 
 // Asegurarnos de que las carpetas de destino existan
-const uploadDirs = ['uploads/logos', 'uploads/cvs'];
+const uploadDirs = ['uploads/logos', 'uploads/cvs', 'uploads/avatars'];
 uploadDirs.forEach(dir => {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Separar logos de CVs según el tipo MIME
         if (file.mimetype === 'application/pdf') {
             cb(null, 'uploads/cvs/');
+        } else if (file.fieldname === 'avatar') {
+            cb(null, 'uploads/avatars/');
         } else {
             cb(null, 'uploads/logos/');
         }

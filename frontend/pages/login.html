@@ -223,6 +223,12 @@
     .form-footer a:hover { color: var(--color-primary-dk); }
     .form-footer .sep { margin: 0 .4rem; color: var(--color-border); }
 
+    /* Botón Inicio */
+    .btn-inicio:hover {
+      border-color: var(--color-primary) !important;
+      box-shadow: 0 0 0 3px rgba(26,86,219,.1) !important;
+    }
+
     /* Mobile */
     @media (max-width: 768px) {
       .split-wrap { grid-template-columns: 1fr; }
@@ -249,7 +255,7 @@
         </div>
       </div>
 
-      <div class="brand-tag" id="brandTag">✦ Para Candidatos</div>
+      <div class="brand-tag" id="brandTag">Para Candidatos</div>
 
       <h2 class="brand-heading" id="brandHeading">
         Tu próxima oportunidad<br>te está esperando
@@ -279,6 +285,21 @@
   <!-- ── Formulario ── -->
   <div class="split-form">
     <div class="form-inner">
+
+      <div style="text-align:right;margin-bottom:1.25rem">
+        <a href="/index.html" class="btn-inicio"
+           style="display:inline-flex;align-items:center;gap:.4rem;
+                  padding:.45rem 1rem;border-radius:999px;
+                  border:1.5px solid var(--color-border);
+                  background:#fff;color:var(--color-text);
+                  font-size:.875rem;font-weight:600;text-decoration:none;
+                  transition:border-color .15s,box-shadow .15s">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L8.354 1.146z"/>
+          </svg>
+          Inicio
+        </a>
+      </div>
 
       <div class="form-header">
         <h1>Bienvenido de vuelta</h1>

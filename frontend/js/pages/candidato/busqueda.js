@@ -1,101 +1,72 @@
+// busqueda.js — búsqueda y postulación a vacantes
 import { apiFetch } from '/js/api.js';
-import { mountShell } from '/js/shell.js';
-import { renderIcon } from '/js/icons.js';
-import { modalidadLabel, contratoLabel, expLabel, formatSalario, timeAgo, escapeHtml, badgeForModalidad } from '/js/helpers.js';
+import { requireAuth, logout } from '/js/auth.js';
 
-const user = mountShell('CANDIDATO');
-if (!user) throw new Error('Unauthorized');
+// Redirige si no hay sesión
+requireAuth();
 
-const page = document.getElementById('page');
-page.innerHTML = `
-  <div style="max-width:1200px;margin:0 auto" class="ij-flex-col ij-gap-4">
-    <div>
-      <h1 class="ij-text-xl ij-font-bold">Buscar Vacantes</h1>
-      <p class="ij-text-sm ij-text-muted">Descubre las oportunidades que mejor se adapten a ti.</p>
-    </div>
+document.getElementById('logoutBtn').addEventListener('click', e => {
+  e.preventDefault();
+  logout();
+});
 
-    <div class="ij-card">
-      <div class="ij-card-body">
-        <div class="ij-grid ij-gap-3" style="grid-template-columns:2fr 1fr 1fr 1fr auto">
-          <input id="q" class="ij-input" placeholder="Título, palabra clave o empresa...">
-          <select id="fTrabajo" class="ij-select">
-            <option value="">Modalidad</option>
-            <option value="presencial">Presencial</option>
-            <option value="remoto">Remoto</option>
-            <option value="hibrido">Híbrido</option>
-          </select>
-          <select id="fContrato" class="ij-select">
-            <option value="">Contrato</option>
-            <option value="completo">Tiempo completo</option>
-            <option value="medio">Medio tiempo</option>
-            <option value="temporal">Temporal</option>
-            <option value="freelance">Freelance</option>
-          </select>
-          <select id="fExp" class="ij-select">
-            <option value="">Experiencia</option>
-            <option value="junior">Junior</option>
-            <option value="mid">Mid</option>
-            <option value="senior">Senior</option>
-            <option value="lead">Lead</option>
-          </select>
-          <button id="btnFiltro" class="ij-btn ij-btn-primary">${renderIcon('search')} Buscar</button>
-        </div>
-      </div>
-    </div>
+// Referencias al DOM
+const resultados = document.getElementById('resultados');
+const modalPostularEl = document.getElementById('modalPostular');
+const modalPostular = new bootstrap.Modal(modalPostularEl);
 
-    <div id="results" class="ij-flex-col ij-gap-3">
-      <p class="ij-text-sm ij-text-muted">Cargando vacantes...</p>
-    </div>
-  </div>
+// Vacante actualmente seleccionada para postular
+let vacanaActual = null;
 
-  <div id="postModal" class="ij-hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:1rem">
-    <div class="ij-card" style="max-width:480px;width:100%">
-      <div class="ij-card-header">
-        <div class="ij-card-title" id="pmTitle">Postular</div>
-      </div>
-      <div class="ij-card-body">
-        <div id="pmAlert" class="ij-alert ij-alert-error ij-hidden"></div>
-        <div class="ij-form-group">
-          <label class="ij-label">Mensaje (opcional)</label>
-          <textarea id="pmMensaje" class="ij-textarea" rows="4" placeholder="Cuéntale a la empresa por qué eres el candidato ideal..."></textarea>
-        </div>
-      </div>
-      <div class="ij-flex ij-justify-end ij-gap-2" style="padding:0 1.25rem 1rem">
-        <button id="pmCancel" class="ij-btn ij-btn-outline ij-btn-sm">Cancelar</button>
-        <button id="pmSubmit" class="ij-btn ij-btn-primary ij-btn-sm">Enviar postulación</button>
-      </div>
-    </div>
-  </div>
-`;
+// Etiquetas de modalidad y contrato
+const modalidadLabel = { presencial: 'Presencial', remoto: 'Remoto', hibrido: 'Híbrido' };
+const contratoLabel  = { completo: 'Tiempo completo', medio: 'Medio tiempo', temporal: 'Temporal', freelance: 'Freelance' };
+const expLabel       = { junior: 'Junior', mid: 'Mid', senior: 'Senior', lead: 'Lead' };
 
-const $ = (id) => document.getElementById(id);
-const results = $('results');
-let currentVac = null;
+// Color del badge según modalidad
+const badgeModalidad = { presencial: 'bg-info text-dark', remoto: 'bg-success', hibrido: 'bg-warning text-dark' };
 
+// Escapa caracteres HTML
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Formatea salario si existe
+function formatSalario(min, max) {
+  if (!min && !max) return '';
+  if (min && max) return `$${Number(min).toLocaleString()} – $${Number(max).toLocaleString()}`;
+  if (min) return `Desde $${Number(min).toLocaleString()}`;
+  return `Hasta $${Number(max).toLocaleString()}`;
+}
+
+// Construye la tarjeta de una vacante
 function renderCard(v) {
+  const salario = formatSalario(v.salario_min, v.salario_max);
   return `
-    <div class="ij-card ij-card-hover">
-      <div class="ij-card-body">
-        <div class="ij-flex ij-justify-between ij-items-start ij-gap-3">
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start gap-3">
           <div style="min-width:0;flex:1">
-            <div class="ij-flex ij-items-center ij-gap-2 ij-mb-1">
-              <h3 class="ij-text-md ij-font-bold">${escapeHtml(v.titulo)}</h3>
-              <span class="ij-badge ${badgeForModalidad(v.tipo_trabajo)}">${modalidadLabel(v.tipo_trabajo)}</span>
+            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+              <h5 class="card-title mb-0 fw-bold">${esc(v.titulo)}</h5>
+              <span class="badge ${badgeModalidad[v.tipo_trabajo] ?? 'bg-secondary'}">
+                ${modalidadLabel[v.tipo_trabajo] ?? esc(v.tipo_trabajo ?? '')}
+              </span>
             </div>
-            <div class="ij-text-sm ij-text-muted ij-mb-2">${escapeHtml(v.empresa_nombre ?? '')}</div>
-            <div class="ij-flex ij-gap-3 ij-text-xs ij-text-muted-2 ij-flex-wrap">
-              <span>${renderIcon('mapPin')} ${escapeHtml(v.ubicacion)}</span>
-              <span>${renderIcon('briefcase')} ${contratoLabel(v.tipo_contrato)}</span>
-              <span>${renderIcon('star')} ${expLabel(v.experiencia)}</span>
-              <span>${renderIcon('clock')} ${timeAgo(v.created_at)}</span>
+            <p class="text-muted small mb-2">${esc(v.empresa_nombre ?? '')}</p>
+            <div class="d-flex gap-3 text-muted small flex-wrap mb-2">
+              ${v.ubicacion ? `<span><i class="bi bi-geo-alt me-1"></i>${esc(v.ubicacion)}</span>` : ''}
+              ${v.tipo_contrato ? `<span><i class="bi bi-briefcase me-1"></i>${contratoLabel[v.tipo_contrato] ?? esc(v.tipo_contrato)}</span>` : ''}
+              ${v.experiencia ? `<span><i class="bi bi-star me-1"></i>${expLabel[v.experiencia] ?? esc(v.experiencia)}</span>` : ''}
             </div>
-            <p class="ij-text-sm ij-mt-2 ij-line-clamp-2">${escapeHtml((v.descripcion ?? '').slice(0, 220))}</p>
-            <div class="ij-text-sm ij-font-semibold ij-mt-2" style="color:var(--color-secondary)">${formatSalario(v.salario_min, v.salario_max)}</div>
+            <p class="small text-secondary mb-2">${esc((v.descripcion ?? '').slice(0, 220))}${(v.descripcion ?? '').length > 220 ? '...' : ''}</p>
+            ${salario ? `<div class="small fw-semibold" style="color:#10b981">${salario}</div>` : ''}
           </div>
-          <div class="ij-flex-col ij-gap-2">
-            <button class="ij-btn ij-btn-primary ij-btn-sm"
-              data-vid="${escapeHtml(v.id)}"
-              data-vtitulo="${escapeHtml(v.titulo)}">
+          <!-- Botón de postulación -->
+          <div class="flex-shrink-0">
+            <button class="btn btn-primary btn-sm btn-postular"
+              data-vid="${esc(v.id)}"
+              data-vtitulo="${esc(v.titulo)}">
               Postularme
             </button>
           </div>
@@ -105,59 +76,96 @@ function renderCard(v) {
   `;
 }
 
-async function cargar() {
-  results.innerHTML = '<p class="ij-text-sm ij-text-muted">Cargando...</p>';
+// Busca y renderiza vacantes según los filtros
+async function buscar() {
+  resultados.innerHTML = '<p class="text-muted small">Buscando...</p>';
+
   const params = new URLSearchParams();
-  if ($('fTrabajo').value)  params.set('tipo_trabajo', $('fTrabajo').value);
-  if ($('fContrato').value) params.set('tipo_contrato', $('fContrato').value);
-  if ($('fExp').value)      params.set('experiencia', $('fExp').value);
+  const fTrabajo  = document.getElementById('fTrabajo').value;
+  const fContrato = document.getElementById('fContrato').value;
+  const fExp      = document.getElementById('fExp').value;
+
+  if (fTrabajo)  params.set('tipo_trabajo', fTrabajo);
+  if (fContrato) params.set('tipo_contrato', fContrato);
+  if (fExp)      params.set('experiencia', fExp);
   params.set('limit', '50');
+
   try {
-    const r = await apiFetch(`/vacantes?${params}`);
-    let items = r?.data ?? [];
-    const q = $('q').value.trim().toLowerCase();
-    if (q) items = items.filter(v =>
-      (v.titulo ?? '').toLowerCase().includes(q) ||
-      (v.empresa_nombre ?? '').toLowerCase().includes(q) ||
-      (v.descripcion ?? '').toLowerCase().includes(q)
-    );
-    results.innerHTML = items.length
-      ? items.map(renderCard).join('')
-      : '<div class="ij-card"><div class="ij-card-body" style="text-align:center;padding:2rem"><p class="ij-text-sm ij-text-muted">No se encontraron vacantes con esos filtros.</p></div></div>';
-  } catch {
-    results.innerHTML = '<div class="ij-alert ij-alert-error">Error al cargar vacantes.</div>';
+    const resp = await apiFetch(`/vacantes?${params}`);
+    let items = resp?.data ?? [];
+
+    // Filtro de texto en el cliente
+    const q = document.getElementById('q').value.trim().toLowerCase();
+    if (q) {
+      items = items.filter(v =>
+        (v.titulo ?? '').toLowerCase().includes(q) ||
+        (v.empresa_nombre ?? '').toLowerCase().includes(q) ||
+        (v.descripcion ?? '').toLowerCase().includes(q)
+      );
+    }
+
+    if (items.length === 0) {
+      resultados.innerHTML = `
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-search fs-2 text-muted d-block mb-2"></i>
+            <p class="text-muted small">No se encontraron vacantes con esos filtros.</p>
+          </div>
+        </div>`;
+      return;
+    }
+
+    resultados.innerHTML = items.map(renderCard).join('');
+  } catch (err) {
+    resultados.innerHTML = '<div class="alert alert-danger small">Error al cargar vacantes. Intenta de nuevo.</div>';
+    console.error(err);
   }
 }
 
-$('btnFiltro').addEventListener('click', cargar);
-$('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') cargar(); });
+// Buscar al hacer click en el botón
+document.getElementById('btnBuscar').addEventListener('click', buscar);
 
-results.addEventListener('click', (ev) => {
-  const b = ev.target.closest('[data-vid]');
-  if (!b) return;
-  currentVac = { id: b.dataset.vid, titulo: b.dataset.vtitulo };
-  $('pmTitle').textContent = `Postular a: ${currentVac.titulo}`;
-  $('pmMensaje').value = '';
-  $('pmAlert').classList.add('ij-hidden');
-  $('postModal').classList.remove('ij-hidden');
+// Buscar al presionar Enter en el input
+document.getElementById('q').addEventListener('keydown', e => {
+  if (e.key === 'Enter') buscar();
 });
 
-$('pmCancel').addEventListener('click', () => $('postModal').classList.add('ij-hidden'));
-$('pmSubmit').addEventListener('click', async () => {
-  if (!currentVac) return;
-  const btn = $('pmSubmit');
+// Abrir modal al hacer click en "Postularme"
+resultados.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-postular');
+  if (!btn) return;
+  vacanaActual = { id: btn.dataset.vid, titulo: btn.dataset.vtitulo };
+  document.getElementById('modalPostularLabel').textContent = `Postular a: ${vacanaActual.titulo}`;
+  document.getElementById('pmMensaje').value = '';
+  document.getElementById('postularAlert').classList.add('d-none');
+  modalPostular.show();
+});
+
+// Enviar postulación
+document.getElementById('btnEnviarPostulacion').addEventListener('click', async () => {
+  if (!vacanaActual) return;
+
+  const btn = document.getElementById('btnEnviarPostulacion');
   btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
   try {
-    await apiFetch(`/candidato/postulaciones/${currentVac.id}`, {
+    await apiFetch(`/candidato/postulaciones/${vacanaActual.id}`, {
       method: 'POST',
-      body: JSON.stringify({ mensaje: $('pmMensaje').value.trim() || undefined }),
+      body: JSON.stringify({ mensaje: document.getElementById('pmMensaje').value.trim() || undefined }),
     });
-    $('postModal').classList.add('ij-hidden');
-    alert('¡Postulación enviada!');
+    modalPostular.hide();
+    // Mostramos un mensaje simple usando alert nativo — suficiente para esta vista
+    alert('¡Postulación enviada correctamente!');
   } catch (err) {
-    $('pmAlert').textContent = err.message ?? 'Error';
-    $('pmAlert').classList.remove('ij-hidden');
-  } finally { btn.disabled = false; }
+    const alertEl = document.getElementById('postularAlert');
+    alertEl.textContent = err.message ?? 'Error al enviar la postulación.';
+    alertEl.classList.remove('d-none');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar postulación';
+  }
 });
 
-cargar();
+// Carga inicial
+buscar();

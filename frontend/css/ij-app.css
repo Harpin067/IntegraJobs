@@ -1,0 +1,85 @@
+/* ═══════════════════════════════════════════════════════
+   IntegraJobs — Paleta de colores y estilos globales
+   Sidebar brand: #0f172a → #1e3a8a (gradiente oscuro)
+   Primario:      #1e40af  (azul marino — igual que sidebar)
+   Acento verde:  #10b981  (marca IntegraJobs)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Override Bootstrap primary para toda la app ──────── */
+:root {
+  --bs-primary:         #1e40af;
+  --bs-primary-rgb:     30, 64, 175;
+  --bs-link-color:      #1e40af;
+  --bs-link-color-rgb:  30, 64, 175;
+  --bs-link-hover-color:#1e3a8a;
+  --ij-primary:         #1e40af;
+  --ij-primary-dark:    #1e3a8a;
+  --ij-green:           #10b981;
+}
+
+body { font-family: 'Segoe UI', sans-serif; }
+
+/* ── Botón primario ───────────────────────────────────── */
+.btn-primary {
+  --bs-btn-bg:                  #1e40af;
+  --bs-btn-border-color:        #1e40af;
+  --bs-btn-hover-bg:            #1e3a8a;
+  --bs-btn-hover-border-color:  #1e3a8a;
+  --bs-btn-active-bg:           #1e3a8a;
+  --bs-btn-active-border-color: #1e3a8a;
+  --bs-btn-focus-shadow-rgb:    30, 64, 175;
+}
+
+.btn-outline-primary {
+  --bs-btn-color:               #1e40af;
+  --bs-btn-border-color:        #1e40af;
+  --bs-btn-hover-bg:            #1e40af;
+  --bs-btn-hover-border-color:  #1e40af;
+  --bs-btn-active-bg:           #1e3a8a;
+  --bs-btn-focus-shadow-rgb:    30, 64, 175;
+}
+
+/* ── Sidebar ──────────────────────────────────────────── */
+.sidebar-link { color: rgba(255,255,255,.7) !important; text-decoration: none; }
+.sidebar-link:hover  { background: rgba(255,255,255,.1)  !important; color: #fff !important; }
+.sidebar-link.active { background: rgba(255,255,255,.15) !important; color: #fff !important; font-weight: 600; }
+
+/* ── Cabecera de sección (cards con gradiente) ────────── */
+.section-header {
+  background: linear-gradient(90deg, #0f172a, #1e3a8a);
+  color: #fff;
+  padding: .75rem 1.25rem;
+}
+.section-header .section-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 700; flex-shrink: 0;
+}
+
+/* ── Avatar candidato ─────────────────────────────────── */
+.avatar-circle {
+  width: 46px; height: 46px; border-radius: 50%;
+  object-fit: cover; border: 2px solid #dee2e6; flex-shrink: 0;
+}
+.avatar-ph {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: #e9ecef; display: flex; align-items: center;
+  justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+}
+
+/* ── Modal de PDF ─────────────────────────────────────── */
+.pdf-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  z-index: 1055; display: flex; align-items: center;
+  justify-content: center; padding: 1rem;
+}
+.pdf-box {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  width: 100%; max-width: 900px; height: 88vh;
+  display: flex; flex-direction: column;
+}
+.pdf-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1.25rem; border-bottom: 1px solid #dee2e6; flex-shrink: 0;
+}

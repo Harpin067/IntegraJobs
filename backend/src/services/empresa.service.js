@@ -212,6 +212,7 @@ export const empresaService = {
                 u.apellidos,
                 u.email,
                 u.cv_url,
+                u.avatar_url,
                 u.telefono
             FROM applications a
             JOIN users u ON a.user_id = u.id

@@ -1,151 +1,163 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Vacantes | IntegraJobs</title>
-    <link rel="stylesheet" href="/css/theme.css">
-    <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fb; display: flex; }
-
-        .sidebar {
-            width: 240px;
-            min-height: 100vh;
-            background: linear-gradient(180deg, #0f172a, #1e3a8a);
-            color: white;
-            padding: 20px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar h2 { color: #10B981; margin-bottom: 30px; }
-        .sidebar a { display: block; color: #cbd5f5; padding: 10px; text-decoration: none; border-radius: 8px; margin-bottom: 4px; }
-        .sidebar a:hover { background: rgba(255,255,255,0.1); color: white; }
-        .sidebar .logout { margin-top: auto; color: #f87171; }
-
-        .main { flex: 1; padding: 30px; overflow: auto; }
-        .page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        h1 { margin-top: 0; color: #111827; }
-
-        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem; }
-        .card h3 { margin: 0 0 6px; }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600;
-        }
-        .badge-activa   { background: #d1fae5; color: #065f46; }
-        .badge-pausada  { background: #fef3c7; color: #92400e; }
-        .badge-cerrada  { background: #fee2e2; color: #991b1b; }
-
-        .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-        .btn-sm { padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
-        .btn-candidatos { background: #1A56DB; color: white; }
-        .btn-editar     { background: #f59e0b; color: white; }
-        .btn-pausar     { background: #6b7280; color: white; }
-        .btn-activar    { background: #10B981; color: white; }
-        .btn-cerrar     { background: #ef4444; color: white; }
-        .btn-sm:hover   { opacity: 0.85; }
-
-        .cv-link { display: inline-block; background: #e5e7eb; color: #111827; padding: 0.3rem 0.8rem; text-decoration: none; border-radius: 4px; margin-top: 0.5rem; font-size: 0.85rem; }
-        .sin-cv  { color: #ef4444; font-size: 0.8rem; }
-        select.status-select { padding: 0.4rem; border-radius: 4px; border: 1px solid #ccc; font-size: 0.85rem; }
-
-        /* Edit panel */
-        #editPanel { display: none; }
-        #editPanel h2 { margin-top: 0; }
-        .edit-form input,
-        .edit-form textarea,
-        .edit-form select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; font-size: 0.9rem; box-sizing: border-box; }
-        .edit-form textarea { min-height: 80px; }
-        .edit-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn-guardar { background: #1A56DB; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-cancelar { background: #e5e7eb; color: #374151; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-left: 8px; }
-        #editMsg { margin-top: 10px; font-weight: 600; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Vacantes | IntegraJobs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ij-app.css">
 </head>
-<body>
+<body class="bg-light">
 
-    <div class="sidebar">
-        <h2>IntegraJobs</h2>
-        <a href="/pages/empresa/dashboard.html">Dashboard</a>
-        <a href="/pages/empresa/vacantes.html">Mis Vacantes</a>
-        <a href="/pages/empresa/crear-vacante.html">Publicar</a>
-        <a href="/pages/empresa/perfil.html">Perfil</a>
-        <a href="#" id="logoutBtn" class="logout">Cerrar Sesión</a>
+<div class="d-flex">
+
+  <!-- Sidebar -->
+  <div style="width:230px;min-height:100vh;background:linear-gradient(180deg,#0f172a,#1e3a8a);flex-shrink:0" class="d-flex flex-column text-white">
+    <div class="p-3" style="border-bottom:1px solid rgba(255,255,255,.12)">
+      <div class="fw-bold fs-6" style="color:#10b981">IntegraJobs</div>
+      <small style="color:rgba(255,255,255,.5);font-size:.7rem">Panel Empresa</small>
+    </div>
+    <nav class="flex-grow-1 p-2">
+      <a href="/pages/empresa/dashboard.html"     class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-grid"></i> Dashboard</a>
+      <a href="/pages/empresa/vacantes.html"       class="sidebar-link active d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-file-text"></i> Mis Vacantes</a>
+      <a href="/pages/empresa/crear-vacante.html"  class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-plus-circle"></i> Publicar Vacante</a>
+      <a href="/pages/empresa/perfil.html"         class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 mb-1"><i class="bi bi-building"></i> Perfil</a>
+    </nav>
+    <div class="p-2" style="border-top:1px solid rgba(255,255,255,.12)">
+      <a href="#" id="logoutBtn" class="sidebar-link d-flex align-items-center gap-2 rounded px-3 py-2 text-danger"><i class="bi bi-box-arrow-left"></i> Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-grow-1 p-4">
+
+    <div class="mb-4">
+      <h4 class="fw-bold mb-1">Mis Vacantes y Candidatos</h4>
+      <p class="text-muted mb-0">Gestiona tus publicaciones y revisa los postulantes.</p>
     </div>
 
-    <div class="main">
-        <h1>Mis Vacantes y Candidatos</h1>
+    <div class="row g-4">
 
-        <div class="page-grid">
-
-            <!-- Columna izquierda: lista de vacantes -->
-            <div>
-                <h2>Mis Vacantes</h2>
-                <div id="vacantesList">Cargando vacantes...</div>
-            </div>
-
-            <!-- Columna derecha: candidatos o formulario edición -->
-            <div>
-                <!-- Panel candidatos -->
-                <div id="candidatosPanel">
-                    <h2 id="atsTitle">Candidatos</h2>
-                    <div id="aplicantesContainer">
-                        <p>Selecciona "Ver Candidatos" en una vacante.</p>
-                    </div>
-                </div>
-
-                <!-- Panel edición (oculto por defecto) -->
-                <div id="editPanel">
-                    <h2>Editar Vacante</h2>
-                    <form id="editForm" class="edit-form">
-                        <input  id="e_titulo"      placeholder="Título del puesto" required>
-                        <input  id="e_ubicacion"   placeholder="Ubicación" required>
-                        <textarea id="e_descripcion" placeholder="Descripción" required></textarea>
-                        <textarea id="e_requisitos"  placeholder="Requisitos" required></textarea>
-                        <div class="row">
-                            <select id="e_tipoTrabajo">
-                                <option value="remoto">Remoto</option>
-                                <option value="presencial">Presencial</option>
-                                <option value="hibrido">Híbrido</option>
-                            </select>
-                            <select id="e_tipoContrato">
-                                <option value="completo">Tiempo completo</option>
-                                <option value="medio">Medio tiempo</option>
-                                <option value="temporal">Temporal</option>
-                                <option value="freelance">Freelance</option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <select id="e_experiencia">
-                                <option value="junior">Junior</option>
-                                <option value="mid">Mid</option>
-                                <option value="senior">Senior</option>
-                                <option value="lead">Lead</option>
-                            </select>
-                            <input id="e_contacto" placeholder="Email de contacto" required>
-                        </div>
-                        <div class="row">
-                            <input id="e_salarioMin" placeholder="Salario mínimo (opcional)">
-                            <input id="e_salarioMax" placeholder="Salario máximo (opcional)">
-                        </div>
-                        <div>
-                            <button type="submit" class="btn-guardar">Guardar Cambios</button>
-                            <button type="button" class="btn-cancelar" id="cancelEdit">Cancelar</button>
-                        </div>
-                        <p id="editMsg"></p>
-                    </form>
-                </div>
-            </div>
-
+      <!-- Columna izquierda: lista de vacantes -->
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm mb-3" style="border-radius:12px;overflow:hidden">
+          <div class="section-header d-flex align-items-center gap-2">
+            <i class="bi bi-file-text fs-5"></i>
+            <span class="fw-semibold">Vacantes publicadas</span>
+          </div>
+          <div class="card-body p-2" id="vacantesList">
+            <div class="text-center text-muted py-4">Cargando vacantes...</div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <script type="module" src="/js/pages/empresa/empresa-vacantes.js"></script>
-    <script type="module">
-        import { logout } from '/js/auth.js';
-        document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
-    </script>
+      <!-- Columna derecha: candidatos o formulario de edición -->
+      <div class="col-lg-7">
+
+        <!-- Panel de candidatos -->
+        <div id="candidatosPanel">
+          <div class="card border-0 shadow-sm" style="border-radius:12px;overflow:hidden">
+            <div class="section-header d-flex align-items-center gap-2">
+              <i class="bi bi-people fs-5"></i>
+              <span class="fw-semibold" id="atsTitle">Candidatos</span>
+            </div>
+            <div class="card-body" id="aplicantesContainer">
+              <div class="text-center text-muted py-5">
+                <i class="bi bi-people fs-1 d-block mb-2 opacity-25"></i>
+                Selecciona "Ver Candidatos" en una vacante para revisar los postulantes.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de edición (oculto por defecto) -->
+        <div id="editPanel" style="display:none">
+          <div class="card border-0 shadow-sm" style="border-radius:12px;overflow:hidden">
+            <div class="section-header d-flex align-items-center gap-2">
+              <i class="bi bi-pencil fs-5"></i>
+              <span class="fw-semibold">Editar Vacante</span>
+            </div>
+            <div class="card-body">
+              <form id="editForm">
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">Título</label>
+                  <input id="e_titulo" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">Ubicación</label>
+                  <input id="e_ubicacion" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">Descripción</label>
+                  <textarea id="e_descripcion" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">Requisitos</label>
+                  <textarea id="e_requisitos" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="row g-2 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Modalidad</label>
+                    <select id="e_tipoTrabajo" class="form-select">
+                      <option value="remoto">Remoto</option>
+                      <option value="presencial">Presencial</option>
+                      <option value="hibrido">Híbrido</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Contrato</label>
+                    <select id="e_tipoContrato" class="form-select">
+                      <option value="completo">Tiempo completo</option>
+                      <option value="medio">Medio tiempo</option>
+                      <option value="temporal">Temporal</option>
+                      <option value="freelance">Freelance</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Experiencia</label>
+                    <select id="e_experiencia" class="form-select">
+                      <option value="junior">Junior</option>
+                      <option value="mid">Mid</option>
+                      <option value="senior">Senior</option>
+                      <option value="lead">Lead</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">Email de contacto</label>
+                  <input id="e_contacto" class="form-control" required>
+                </div>
+                <div class="row g-2 mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Salario mínimo</label>
+                    <input id="e_salarioMin" class="form-control" placeholder="Opcional">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Salario máximo</label>
+                    <input id="e_salarioMax" class="form-control" placeholder="Opcional">
+                  </div>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                  <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-check-lg"></i> Guardar cambios</button>
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="cancelEdit">Cancelar</button>
+                  <span id="editMsg" class="small fw-semibold ms-1"></span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/pages/empresa/empresa-vacantes.js"></script>
+<script type="module">
+  import { logout } from '/js/auth.js';
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+</script>
 </body>
 </html>

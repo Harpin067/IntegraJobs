@@ -171,9 +171,10 @@
     </a>
     <ul>
       <li><a href="/">Inicio</a></li>
-      <li><a href="/pages/login.html">Empleos</a></li>
+      <li><a href="/busqueda.html">Empleos</a></li>
+      <li><a href="/pages/recursos.html">Recursos</a></li>
+      <li><a href="/pages/foros.html">Foros</a></li>
       <li><a href="/pages/login.html?type=empresa">Empresas</a></li>
-      <li><a href="/pages/registro-candidato.html">Candidatos</a></li>
     </ul>
     <div class="ij-flex ij-gap-2">
       <a href="/pages/login.html" class="ij-btn ij-btn-ghost ij-btn-sm">Iniciar sesión</a>
@@ -194,7 +195,7 @@
       </div>
 
       <span class="ij-badge" style="background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.35);margin-bottom:1.5rem;font-size:.8125rem">
-        ✦ N.° 1 Portal de Empleo en El Salvador
+        N.° 1 Portal de Empleo en El Salvador
       </span>
 
       <h1 style="font-size:clamp(2.25rem,5.5vw,3.75rem);line-height:1.1;margin-bottom:1.25rem;font-weight:800;letter-spacing:-.025em">
@@ -213,7 +214,7 @@
           <div class="search-divider"></div>
           <select name="ubicacion" aria-label="Departamento"
                   style="flex:.6;min-width:0;border:none;outline:none;padding:.75rem 1rem;font-size:.9375rem;color:var(--color-text);background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.25rem">
-            <option value="">📍 Todo El Salvador</option>
+            <option value="">Todo El Salvador</option>
             <option>Ahuachapán</option>
             <option>Cabañas</option>
             <option>Chalatenango</option>
@@ -256,23 +257,23 @@
       <div class="ij-stats-grid">
         <div class="ij-stat-card">
           <div class="ij-stat-value" id="statVacantes" style="color:var(--color-primary)">—</div>
-          <div class="ij-text-sm ij-font-semibold">Vacantes activas</div>
-          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">actualizadas diario</div>
+          <div class="ij-text-sm ij-font-semibold">Empleos publicados</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">vacantes activas</div>
         </div>
         <div class="ij-stat-card">
           <div class="ij-stat-value" id="statEmpresas" style="color:var(--color-primary)">—</div>
-          <div class="ij-text-sm ij-font-semibold">Empresas registradas</div>
-          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">verificadas</div>
+          <div class="ij-text-sm ij-font-semibold">Empresas</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">registradas</div>
         </div>
         <div class="ij-stat-card">
-          <div class="ij-stat-value" style="color:var(--color-secondary)">95%</div>
-          <div class="ij-text-sm ij-font-semibold">Tasa de éxito</div>
-          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">de colocación</div>
+          <div class="ij-stat-value" id="statUsuarios" style="color:var(--color-secondary)">—</div>
+          <div class="ij-text-sm ij-font-semibold">Usuarios</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">candidatos activos</div>
         </div>
         <div class="ij-stat-card">
-          <div class="ij-stat-value" style="color:var(--color-secondary)">48h</div>
-          <div class="ij-text-sm ij-font-semibold">Tiempo medio</div>
-          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">primera respuesta</div>
+          <div class="ij-stat-value" id="statSolicitudes" style="color:var(--color-secondary)">—</div>
+          <div class="ij-text-sm ij-font-semibold">Solicitudes</div>
+          <div class="ij-text-xs ij-text-muted-2 ij-mt-1">postulaciones enviadas</div>
         </div>
       </div>
     </div>

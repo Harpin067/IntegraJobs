@@ -23,12 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Copy dinámico por rol ──────────────────────────────────────────
   const brandCopy = {
     CANDIDATO: {
-      tag:     '✦ Para Candidatos',
+      tag:     'Para Candidatos',
       heading: 'Tu próxima oportunidad<br>te está esperando',
       sub:     'Accede a miles de vacantes reales, crea alertas personalizadas y postula con un solo clic.',
     },
     EMPRESA: {
-      tag:     '✦ Para Empresas',
+      tag:     'Para Empresas',
       heading: 'El mejor talento<br>está aquí',
       sub:     'Publica tus vacantes, gestiona postulaciones y construye el equipo que tu empresa necesita.',
     },

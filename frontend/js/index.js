@@ -1,10 +1,12 @@
 // frontend/js/index.js
 import { formatSalario, modalidadLabel, badgeForModalidad, timeAgo, escapeHtml, initials } from '/js/helpers.js';
 
-const container      = document.getElementById('featuredJobs');
-const statVacantes   = document.getElementById('statVacantes');
-const statEmpresas   = document.getElementById('statEmpresas');
-const heroIndustrias = document.getElementById('heroIndustrias');
+const container       = document.getElementById('featuredJobs');
+const statVacantes    = document.getElementById('statVacantes');
+const statEmpresas    = document.getElementById('statEmpresas');
+const statUsuarios    = document.getElementById('statUsuarios');
+const statSolicitudes = document.getElementById('statSolicitudes');
+const heroIndustrias  = document.getElementById('heroIndustrias');
 
 document.getElementById('heroSearch').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -36,7 +38,7 @@ const renderCard = (v) => `
       </div>
     </div>
     <div class="ij-flex ij-items-center ij-gap-2" style="flex-wrap:wrap;margin-bottom:.75rem">
-      <span class="ij-text-xs ij-text-muted">📍 ${escapeHtml(v.ubicacion)}</span>
+      <span class="ij-text-xs ij-text-muted">${escapeHtml(v.ubicacion)}</span>
       <span class="ij-badge ${badgeForModalidad(v.tipo_trabajo)}">${modalidadLabel(v.tipo_trabajo)}</span>
     </div>
     <div class="ij-text-xs ij-font-semibold" style="color:var(--color-secondary);margin-bottom:.5rem">
@@ -69,10 +71,13 @@ container.innerHTML = [1, 2, 3].map(skeletonCard).join('');
   try {
     const res = await fetch('/api/public/stats');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const { totalVacantes, totalEmpresas, vacantesRecientes, topIndustrias } = await res.json();
+    const { totalVacantes, totalEmpresas, totalUsuarios, totalSolicitudes, vacantesRecientes, topIndustrias } = await res.json();
 
-    statVacantes.textContent = totalVacantes > 0 ? `+${totalVacantes.toLocaleString()}` : '0';
-    statEmpresas.textContent = totalEmpresas > 0 ? `+${totalEmpresas.toLocaleString()}` : '0';
+    const fmt = (n) => n > 0 ? `+${n.toLocaleString()}` : '0';
+    statVacantes.textContent    = fmt(totalVacantes);
+    statEmpresas.textContent    = fmt(totalEmpresas);
+    if (statUsuarios)    statUsuarios.textContent    = fmt(totalUsuarios    ?? 0);
+    if (statSolicitudes) statSolicitudes.textContent = fmt(totalSolicitudes ?? 0);
 
     if (topIndustrias.length) {
       heroIndustrias.innerHTML = topIndustrias
