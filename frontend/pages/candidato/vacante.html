@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle de Vacante — IntegraJobs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ij-app.css">
+</head>
+<body class="bg-light">
+
+<div class="d-flex" style="min-height:100vh">
+
+  <!-- Sidebar -->
+  <div style="width:230px;min-height:100vh;background:linear-gradient(180deg,#0f172a,#1e3a8a);flex-shrink:0" class="d-flex flex-column text-white">
+    <div class="p-3" style="border-bottom:1px solid rgba(255,255,255,.12)">
+      <div class="fw-bold fs-6" style="color:#10b981">IntegraJobs</div>
+      <small style="color:rgba(255,255,255,.5);font-size:.7rem">Portal Candidato</small>
+    </div>
+    <nav class="flex-grow-1 p-2">
+      <a href="/pages/candidato/dashboard.html"   class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-grid"></i> Dashboard</a>
+      <a href="/pages/candidato/busqueda.html"    class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link active" style="color:rgba(255,255,255,.7)"><i class="bi bi-search"></i> Buscar Empleos</a>
+      <a href="/pages/candidato/perfil.html"      class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-person-circle"></i> Mi Perfil</a>
+      <a href="/pages/candidato/alertas.html"     class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-bell"></i> Alertas</a>
+      <a href="/pages/candidato/valoraciones.html" class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-star"></i> Valoraciones</a>
+      <a href="/pages/candidato/foros.html"       class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 mb-1 sidebar-link" style="color:rgba(255,255,255,.7)"><i class="bi bi-chat-square-text"></i> Foros</a>
+    </nav>
+    <div class="p-2" style="border-top:1px solid rgba(255,255,255,.12)">
+      <a href="#" id="logoutBtn" class="d-flex align-items-center gap-2 text-decoration-none rounded px-3 py-2 text-danger sidebar-link"><i class="bi bi-box-arrow-left"></i> Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-grow-1 p-4" style="max-width:900px">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb small mb-0">
+        <li class="breadcrumb-item"><a href="/pages/candidato/busqueda.html" class="text-decoration-none">Buscar Empleos</a></li>
+        <li class="breadcrumb-item active" id="breadcrumbTitulo">Vacante</li>
+      </ol>
+    </nav>
+
+    <!-- Zona de contenido dinámico -->
+    <div id="mainContent">
+      <div class="card border-0 shadow-sm p-5 text-center text-muted">
+        <div class="spinner-border spinner-border-sm mx-auto mb-2" role="status"></div>
+        <div class="small">Cargando vacante...</div>
+      </div>
+    </div>
+
+    <a href="/pages/candidato/busqueda.html" class="text-muted small d-inline-flex align-items-center gap-1 mt-3">
+      <i class="bi bi-arrow-left"></i> Volver a resultados
+    </a>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/pages/candidato/vacante.js"></script>
+<script type="module">
+  import { logout } from '/js/auth.js';
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+</script>
+</body>
+</html>

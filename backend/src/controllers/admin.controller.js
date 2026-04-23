@@ -73,3 +73,30 @@ export const eliminarThread = async (req, res, next) => {
   try { await svc.eliminarThread(req.params.threadId); res.json({ ok: true }); }
   catch (err) { next(err); }
 };
+
+// ── Stats / Charts ──────────────────────────────────────────
+export const getChartStats = async (req, res, next) => {
+  try { res.json(await svc.getChartStats()); }
+  catch (err) { next(err); }
+};
+
+// ── Recursos ────────────────────────────────────────────────
+export const listarRecursos = async (req, res, next) => {
+  try { res.json(await svc.listarRecursos()); }
+  catch (err) { next(err); }
+};
+
+export const crearRecurso = async (req, res, next) => {
+  try { res.status(201).json(await svc.crearRecurso(req.body)); }
+  catch (err) { next(err); }
+};
+
+export const toggleRecurso = async (req, res, next) => {
+  try { res.json(await svc.toggleRecurso(req.params.resourceId)); }
+  catch (err) { next(err); }
+};
+
+export const eliminarRecurso = async (req, res, next) => {
+  try { await svc.eliminarRecurso(req.params.resourceId); res.json({ ok: true }); }
+  catch (err) { next(err); }
+};

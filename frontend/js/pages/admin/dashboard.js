@@ -211,4 +211,80 @@ function renderVacantes(vacantes) {
   });
 }
 
+// ── Gráficas ──────────────────────────────────────────────
+const STATUS_COLORS = {
+  activa:    { bg: 'rgba(16,185,129,.75)',  border: '#059669' },
+  pausada:   { bg: 'rgba(245,158,11,.75)',  border: '#d97706' },
+  cerrada:   { bg: 'rgba(107,114,128,.75)', border: '#4b5563' },
+  rechazada: { bg: 'rgba(239,68,68,.75)',   border: '#dc2626' },
+};
+const ROL_COLORS = {
+  CANDIDATO:  { bg: 'rgba(26,86,219,.75)',  border: '#1e40af' },
+  EMPRESA:    { bg: 'rgba(16,185,129,.75)', border: '#059669' },
+  SUPERADMIN: { bg: 'rgba(139,92,246,.75)', border: '#7c3aed' },
+};
+
+let chartVacantes = null;
+let chartUsuarios = null;
+
+async function cargarCharts() {
+  try {
+    const stats = await apiFetch('/admin/stats/charts');
+
+    // Vacantes por estado — Doughnut
+    const vLabels  = stats.vacantesPorEstado.map(r => r.status);
+    const vData    = stats.vacantesPorEstado.map(r => r.total);
+    const vColors  = vLabels.map(s => (STATUS_COLORS[s] ?? { bg: '#e5e7eb' }).bg);
+    const vBorders = vLabels.map(s => (STATUS_COLORS[s] ?? { border: '#9ca3af' }).border);
+
+    if (chartVacantes) chartVacantes.destroy();
+    chartVacantes = new Chart(document.getElementById('chartVacantes'), {
+      type: 'doughnut',
+      data: {
+        labels: vLabels.map(s => s.charAt(0).toUpperCase() + s.slice(1)),
+        datasets: [{ data: vData, backgroundColor: vColors, borderColor: vBorders, borderWidth: 2 }],
+      },
+      options: {
+        plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } } },
+        cutout: '60%',
+        maintainAspectRatio: true,
+      },
+    });
+
+    // Usuarios por rol — Bar horizontal
+    const uLabels  = stats.usuariosPorRol.map(r => r.role);
+    const uData    = stats.usuariosPorRol.map(r => r.total);
+    const uColors  = uLabels.map(r => (ROL_COLORS[r] ?? { bg: '#e5e7eb' }).bg);
+    const uBorders = uLabels.map(r => (ROL_COLORS[r] ?? { border: '#9ca3af' }).border);
+
+    if (chartUsuarios) chartUsuarios.destroy();
+    chartUsuarios = new Chart(document.getElementById('chartUsuarios'), {
+      type: 'bar',
+      data: {
+        labels: uLabels,
+        datasets: [{
+          label: 'Usuarios',
+          data: uData,
+          backgroundColor: uColors,
+          borderColor: uBorders,
+          borderWidth: 2,
+          borderRadius: 6,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { color: '#f1f5f9' } },
+          y: { grid: { display: false } },
+        },
+        maintainAspectRatio: true,
+      },
+    });
+  } catch (err) {
+    console.error('Error cargando charts:', err);
+  }
+}
+
 cargar();
+cargarCharts();

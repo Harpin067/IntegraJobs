@@ -1,5 +1,6 @@
 // frontend/js/vacante.js
 import { formatSalario, modalidadLabel, badgeForModalidad, contratoLabel, expLabel, timeAgo, escapeHtml, initials } from '/js/helpers.js';
+import { getToken, getUser } from '/js/auth.js';
 
 const id = new URLSearchParams(location.search).get('id');
 
@@ -103,18 +104,71 @@ function renderDetalle(v) {
       </div>
     </div>
 
-    <!-- CTA postular — redirige a login con redirect param -->
     <button class="postulate-btn" id="btnPostular">
       Quiero postularme →
     </button>
-    <p class="ij-text-xs ij-text-muted-2" style="text-align:center;margin-top:.75rem">
+    <p class="ij-text-xs ij-text-muted-2" id="txtCuenta" style="text-align:center;margin-top:.75rem">
       Se requiere una cuenta para postular. Es gratis.
     </p>
   `;
 
-  // ── Smart redirect al login ───────────────────────────────────────────
-  document.getElementById('btnPostular').addEventListener('click', () => {
-    const redirectUrl = `/vacante.html?id=${encodeURIComponent(id)}`;
-    window.location.href = `/pages/login.html?redirect=${encodeURIComponent(redirectUrl)}`;
-  });
+  const btn       = document.getElementById('btnPostular');
+  const txtCuenta = document.getElementById('txtCuenta');
+  const token     = getToken();
+  const user      = getUser();
+  const esCandidato = token && user?.role === 'CANDIDATO';
+
+  if (esCandidato) {
+    // ── Usuario autenticado como candidato ──────────────────────────────
+    txtCuenta.style.display = 'none';
+
+    btn.addEventListener('click', async () => {
+      btn.disabled    = true;
+      btn.textContent = 'Postulando...';
+
+      try {
+        const res = await fetch(`/api/candidato/postulaciones/${encodeURIComponent(v.id)}`, {
+          method:  'POST',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({}),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          btn.disabled = false;
+          btn.textContent = 'Quiero postularme →';
+          const msg = data.error ?? `Error ${res.status}`;
+          const errEl = document.createElement('p');
+          errEl.className = 'ij-text-xs';
+          errEl.style.cssText = 'color:var(--color-danger);text-align:center;margin-top:.75rem';
+          errEl.textContent = msg;
+          btn.insertAdjacentElement('afterend', errEl);
+          return;
+        }
+
+        btn.style.background = 'var(--color-secondary)';
+        btn.style.boxShadow  = '0 4px 16px rgba(16,185,129,.35)';
+        btn.textContent      = '¡Te has postulado!';
+      } catch {
+        btn.disabled    = false;
+        btn.textContent = 'Quiero postularme →';
+        const errEl = document.createElement('p');
+        errEl.className = 'ij-text-xs';
+        errEl.style.cssText = 'color:var(--color-danger);text-align:center;margin-top:.75rem';
+        errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+        btn.insertAdjacentElement('afterend', errEl);
+      }
+    });
+
+  } else {
+    // ── Usuario no autenticado — redirigir al login ─────────────────────
+    btn.addEventListener('click', () => {
+      const redirectUrl = `/vacante.html?id=${encodeURIComponent(id)}`;
+      window.location.href = `/pages/login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+    });
+  }
 }

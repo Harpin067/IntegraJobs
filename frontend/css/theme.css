@@ -378,3 +378,31 @@ input,select,textarea { font-family: inherit; }
   0%, 100% { opacity: 1; }
   50%       { opacity: .45; }
 }
+
+/* ── Form validation states ── */
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+input.is-invalid:focus,
+select.is-invalid:focus,
+textarea.is-invalid:focus {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+.field-error-msg {
+  display: block;
+  font-size: .78125rem;
+  color: var(--color-danger);
+  margin-top: .3rem;
+  line-height: 1.4;
+}
+/* Compatibilidad Bootstrap: reutiliza is-invalid + invalid-feedback */
+.invalid-feedback { display: block; }
+.was-validated input:invalid,
+.was-validated select:invalid,
+.was-validated textarea:invalid {
+  border-color: var(--color-danger);
+}

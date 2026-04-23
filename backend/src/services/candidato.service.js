@@ -135,6 +135,60 @@ export const eliminarAlerta = async (alertId, userId) => {
   if (!rows[0]) throw makeError('Alerta no encontrada', 404);
 };
 
+export const matchesAlertas = async (userId) => {
+  // Obtiene alertas activas del usuario
+  const { rows: alertas } = await pool.query(
+    `SELECT keyword, ubicacion, tipo_trabajo
+     FROM alerts WHERE user_id = $1 AND is_active = true`,
+    [userId]
+  );
+
+  if (!alertas.length) return { total: 0, vacantes: [] };
+
+  // Construye condiciones OR dinámicas: una por cada alerta
+  // Cada alerta aporta: keyword ILIKE en título/descripción, y filtros opcionales
+  const conditions = [];
+  const params     = [];
+
+  for (const a of alertas) {
+    const sub = [];
+
+    if (a.keyword) {
+      params.push(`%${a.keyword}%`);
+      const p = params.length;
+      sub.push(`(v.titulo ILIKE $${p} OR v.descripcion ILIKE $${p})`);
+    }
+
+    if (a.ubicacion) {
+      params.push(`%${a.ubicacion}%`);
+      sub.push(`v.ubicacion ILIKE $${params.length}`);
+    }
+
+    if (a.tipo_trabajo) {
+      params.push(a.tipo_trabajo);
+      sub.push(`v.tipo_trabajo = $${params.length}`);
+    }
+
+    if (sub.length) conditions.push(`(${sub.join(' AND ')})`);
+  }
+
+  if (!conditions.length) return { total: 0, vacantes: [] };
+
+  const { rows: vacantes } = await pool.query(
+    `SELECT v.id, v.titulo, v.ubicacion, v.tipo_trabajo,
+            c.nombre AS empresa_nombre
+     FROM vacancies v
+     JOIN companies c ON c.id = v.company_id
+     WHERE v.status = 'activa' AND v.is_approved = true
+       AND (${conditions.join(' OR ')})
+     ORDER BY v.created_at DESC
+     LIMIT 10`,
+    params
+  );
+
+  return { total: vacantes.length, vacantes };
+};
+
 // ── Reviews / Valoraciones ────────────────────────────────────────────
 export const crearReview = async (userId, companyId, { rating, comentario }) => {
   const { rows: comp } = await pool.query(

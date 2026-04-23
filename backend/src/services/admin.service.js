@@ -181,3 +181,65 @@ export const eliminarThread = async (threadId) => {
   );
   if (!rowCount) throw makeError('Hilo no encontrado', 404);
 };
+
+// ── Stats / Charts ─────────────────────────────────────────
+export const getChartStats = async () => {
+  const [byStatus, byRole] = await Promise.all([
+    pool.query(
+      `SELECT status, COUNT(*)::int AS total
+       FROM vacancies
+       GROUP BY status
+       ORDER BY total DESC`
+    ),
+    pool.query(
+      `SELECT role, COUNT(*)::int AS total
+       FROM users
+       GROUP BY role
+       ORDER BY total DESC`
+    ),
+  ]);
+
+  return {
+    vacantesPorEstado: byStatus.rows,
+    usuariosPorRol:    byRole.rows,
+  };
+};
+
+// ── Recursos ───────────────────────────────────────────────
+export const listarRecursos = async () => {
+  const { rows } = await pool.query(
+    `SELECT id, titulo, contenido, tipo, imagen_url, is_published, created_at
+     FROM resources
+     ORDER BY created_at DESC`
+  );
+  return rows;
+};
+
+export const crearRecurso = async ({ titulo, contenido, tipo, imagenUrl, isPublished }) => {
+  const { rows } = await pool.query(
+    `INSERT INTO resources (id, titulo, contenido, tipo, imagen_url, is_published, created_at, updated_at)
+     VALUES (gen_random_uuid(), $1, $2, $3::"ResourceType", $4, $5, NOW(), NOW())
+     RETURNING *`,
+    [titulo, contenido, tipo, imagenUrl ?? null, isPublished ?? false]
+  );
+  return rows[0];
+};
+
+export const toggleRecurso = async (resourceId) => {
+  const { rows } = await pool.query(
+    `UPDATE resources
+     SET is_published = NOT is_published, updated_at = NOW()
+     WHERE id = $1
+     RETURNING id, titulo, is_published`,
+    [resourceId]
+  );
+  if (!rows[0]) throw makeError('Recurso no encontrado', 404);
+  return rows[0];
+};
+
+export const eliminarRecurso = async (resourceId) => {
+  const { rowCount } = await pool.query(
+    `DELETE FROM resources WHERE id = $1`, [resourceId]
+  );
+  if (!rowCount) throw makeError('Recurso no encontrado', 404);
+};

@@ -10,28 +10,44 @@ const BADGE_STYLE = {
 };
 const LABEL = { articulo: 'Artículo', tutorial: 'Tutorial', video: 'Video' };
 
+
 function renderCard(r) {
     const badgeStyle = BADGE_STYLE[r.tipo] ?? 'background:#e9ecef;color:#374151';
     const label      = LABEL[r.tipo] ?? r.tipo;
     const fecha      = new Date(r.created_at).toLocaleDateString('es-SV', {
         year: 'numeric', month: 'long', day: 'numeric',
     });
+
+    const url = r.url || r.imagen_url || r.imagenUrl || null;
+
     return `
         <div class="col">
-            <div class="card border-0 shadow-sm h-100 resource-card-hover" style="border-radius:12px;overflow:hidden">
+            <div class="card border-0 shadow-sm h-100 resource-card-hover"
+                 style="border-radius:12px;overflow:hidden">
                 ${r.imagen_url
                     ? `<img src="${r.imagen_url}" alt="${r.titulo}" class="card-img-top"
-                            style="height:180px;object-fit:cover" loading="lazy">`
+                            style="height:180px;object-fit:cover" loading="lazy"
+                            onerror="this.style.display='none'">`
                     : ''
                 }
                 <div class="card-body d-flex flex-column">
-                    <span class="badge mb-2 align-self-start" style="${badgeStyle};font-size:.75rem;font-weight:600">${label}</span>
+                    <span class="badge mb-2 align-self-start"
+                          style="${badgeStyle};font-size:.75rem;font-weight:600">${label}</span>
                     <h6 class="card-title fw-bold">${r.titulo}</h6>
                     <p class="card-text text-muted small flex-grow-1"
                        style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">
                         ${r.contenido}
                     </p>
-                    <div class="text-muted mt-2" style="font-size:.75rem">${fecha}</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
+                        <span class="text-muted" style="font-size:.75rem">${fecha}</span>
+                        <a href="${url ?? '#'}"
+                           ${url ? 'target="_blank" rel="noopener noreferrer"' : ''}
+                           style="font-size:.75rem;font-weight:600;color:${url ? '#1e40af' : '#9ca3af'};text-decoration:none"
+                           onmouseover="this.style.color='${url ? '#1e3a8a' : '#9ca3af'}'"
+                           onmouseout="this.style.color='${url ? '#1e40af' : '#9ca3af'}'">
+                            Ver recurso →
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>`;

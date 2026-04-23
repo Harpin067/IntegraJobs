@@ -48,12 +48,46 @@ function timeAgo(dateStr) {
   return new Date(dateStr).toLocaleDateString('es-SV');
 }
 
-// Carga datos del dashboard
+// ── Banner de alertas con coincidencias ───────────────────────────────────
+// Se ejecuta en paralelo, sin bloquear la carga del dashboard
+apiFetch('/candidato/alertas/matches')
+  .then(data => {
+    if (!data?.total) return;
+
+    const banner = document.createElement('div');
+    banner.className = 'alert alert-primary alert-dismissible d-flex align-items-center gap-3 mb-4';
+    banner.setAttribute('role', 'alert');
+    banner.style.cssText = 'border-radius:12px;border:none;background:linear-gradient(90deg,#eff6ff,#dbeafe);color:#1e3a8a';
+    banner.innerHTML = `
+      <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+           style="width:2.5rem;height:2.5rem;background:rgba(30,58,138,.12)">
+        <i class="bi bi-bell-fill" style="font-size:1.1rem"></i>
+      </div>
+      <div class="flex-grow-1">
+        <div class="fw-semibold">
+          ${data.total === 1 ? 'Hay 1 vacante nueva' : `Hay ${data.total} vacantes nuevas`} que coinciden con tus alertas
+        </div>
+        <div class="small" style="color:#3b82f6">
+          <a href="/pages/candidato/busqueda.html" class="fw-semibold text-decoration-none" style="color:#1d4ed8">
+            Ver oportunidades <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>`;
+
+    // Insertar antes del primer hijo del contenido principal
+    const contenido = document.querySelector('.flex-grow-1.p-4 > div');
+    if (contenido) contenido.prepend(banner);
+  })
+  .catch(() => { /* silencioso — las alertas no deben bloquear el dashboard */ });
+
+// ── Carga datos del dashboard ─────────────────────────────────────────────
 (async () => {
   try {
-    const [posts, vacsResp] = await Promise.all([
+    const [posts, vacsResp, stats] = await Promise.all([
       apiFetch('/candidato/postulaciones'),
       apiFetch('/vacantes?limit=5'),
+      fetch('/api/public/stats').then(r => r.json()),
     ]);
 
     const vacs = vacsResp?.data ?? [];
@@ -61,7 +95,7 @@ function timeAgo(dateStr) {
     // Actualizar stat cards
     document.getElementById('statPostulaciones').textContent = posts.length;
     document.getElementById('statEnProceso').textContent = posts.filter(p => p.status === 'en_proceso').length;
-    document.getElementById('statVacantes').textContent = vacs.length;
+    document.getElementById('statVacantes').textContent = stats.totalVacantes ?? vacs.length;
 
     // Renderizar postulaciones recientes
     const listaPosts = document.getElementById('listaPostulaciones');
@@ -102,7 +136,7 @@ function timeAgo(dateStr) {
       listaVacs.innerHTML = '<ul class="list-group list-group-flush">' +
         vacs.slice(0, 5).map(v => `
           <li class="list-group-item px-0">
-            <a href="/pages/candidato/busqueda.html" class="text-decoration-none text-dark">
+            <a href="/pages/candidato/vacante.html?id=${esc(v.id)}" class="text-decoration-none text-dark">
               <div class="small fw-semibold text-truncate">${esc(v.titulo)}</div>
               <div class="text-muted" style="font-size:.72rem">
                 ${esc(v.empresa_nombre ?? '')} · ${modalidadLabel[v.tipo_trabajo] ?? v.tipo_trabajo ?? ''}

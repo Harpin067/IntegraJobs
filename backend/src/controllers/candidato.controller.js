@@ -62,6 +62,11 @@ export const eliminarAlerta = async (req, res, next) => {
   catch (err) { next(err); }
 };
 
+export const getAlertaMatches = async (req, res, next) => {
+  try { res.json(await svc.matchesAlertas(req.user.id)); }
+  catch (err) { next(err); }
+};
+
 // ── Reviews ───────────────────────────────────────────────────────────
 export const crearReview = async (req, res, next) => {
   try {

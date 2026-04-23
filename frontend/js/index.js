@@ -81,8 +81,16 @@ container.innerHTML = [1, 2, 3].map(skeletonCard).join('');
 
     if (topIndustrias.length) {
       heroIndustrias.innerHTML = topIndustrias
-        .map(i => `<a href="/pages/login.html?industria=${encodeURIComponent(i.industria)}" class="ij-badge" style="background:rgba(255,255,255,.15);color:#fff;cursor:pointer">${escapeHtml(i.industria)}</a>`)
+        .map(i => `<button class="ij-badge badge-categoria"
+                           style="background:rgba(255,255,255,.15);color:#fff;cursor:pointer;border:none"
+                           data-q="${escapeHtml(i.industria)}">${escapeHtml(i.industria)}</button>`)
         .join('');
+
+      heroIndustrias.querySelectorAll('.badge-categoria').forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.location.href = '/busqueda.html?q=' + encodeURIComponent(btn.dataset.q);
+        });
+      });
     }
 
     container.innerHTML = vacantesRecientes.length

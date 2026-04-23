@@ -12,11 +12,6 @@ document.getElementById('logoutBtn').addEventListener('click', e => {
 
 // Referencias al DOM
 const resultados = document.getElementById('resultados');
-const modalPostularEl = document.getElementById('modalPostular');
-const modalPostular = new bootstrap.Modal(modalPostularEl);
-
-// Vacante actualmente seleccionada para postular
-let vacanaActual = null;
 
 // Etiquetas de modalidad y contrato
 const modalidadLabel = { presencial: 'Presencial', remoto: 'Remoto', hibrido: 'Híbrido' };
@@ -64,11 +59,10 @@ function renderCard(v) {
           </div>
           <!-- Botón de postulación -->
           <div class="flex-shrink-0">
-            <button class="btn btn-primary btn-sm btn-postular"
-              data-vid="${esc(v.id)}"
-              data-vtitulo="${esc(v.titulo)}">
-              Postularme
-            </button>
+            <a href="/pages/candidato/vacante.html?id=${esc(v.id)}"
+               class="btn btn-primary btn-sm">
+              Ver y postular
+            </a>
           </div>
         </div>
       </div>
@@ -128,43 +122,6 @@ document.getElementById('btnBuscar').addEventListener('click', buscar);
 // Buscar al presionar Enter en el input
 document.getElementById('q').addEventListener('keydown', e => {
   if (e.key === 'Enter') buscar();
-});
-
-// Abrir modal al hacer click en "Postularme"
-resultados.addEventListener('click', e => {
-  const btn = e.target.closest('.btn-postular');
-  if (!btn) return;
-  vacanaActual = { id: btn.dataset.vid, titulo: btn.dataset.vtitulo };
-  document.getElementById('modalPostularLabel').textContent = `Postular a: ${vacanaActual.titulo}`;
-  document.getElementById('pmMensaje').value = '';
-  document.getElementById('postularAlert').classList.add('d-none');
-  modalPostular.show();
-});
-
-// Enviar postulación
-document.getElementById('btnEnviarPostulacion').addEventListener('click', async () => {
-  if (!vacanaActual) return;
-
-  const btn = document.getElementById('btnEnviarPostulacion');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
-  try {
-    await apiFetch(`/candidato/postulaciones/${vacanaActual.id}`, {
-      method: 'POST',
-      body: JSON.stringify({ mensaje: document.getElementById('pmMensaje').value.trim() || undefined }),
-    });
-    modalPostular.hide();
-    // Mostramos un mensaje simple usando alert nativo — suficiente para esta vista
-    alert('¡Postulación enviada correctamente!');
-  } catch (err) {
-    const alertEl = document.getElementById('postularAlert');
-    alertEl.textContent = err.message ?? 'Error al enviar la postulación.';
-    alertEl.classList.remove('d-none');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Enviar postulación';
-  }
 });
 
 // Carga inicial

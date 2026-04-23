@@ -88,7 +88,6 @@ export const registrarEmpresa = async ({
         passwordHash,
         role: 'EMPRESA',
         nombre,
-        empresaNombre,
       },
     });
     await tx.company.create({

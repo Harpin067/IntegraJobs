@@ -65,13 +65,13 @@ async function cargarCategorias() {
                    style="width:3rem;height:3rem;background:${bg};color:${color};font-size:1.25rem">
                 <i class="bi ${CAT_ICONS[i % CAT_ICONS.length]}"></i>
               </div>
-              <div class="flex-grow-1 min-w-0">
+              <div class="flex-grow-1" style="min-width:0">
                 <div class="fw-bold text-truncate">${esc(c.nombre)}</div>
                 <div class="text-muted small text-truncate">${esc(c.descripcion)}</div>
               </div>
-              <div class="text-end flex-shrink-0">
-                <div class="fw-bold" style="color:#1e40af;font-size:1.1rem">${c.total_threads}</div>
-                <div class="text-muted" style="font-size:.72rem">hilos</div>
+              <div class="text-center flex-shrink-0" style="min-width:2.5rem">
+                <div class="fw-bold" style="color:#1a56db;font-size:1.25rem;line-height:1">${c.total_threads}</div>
+                <div class="text-muted" style="font-size:.68rem;letter-spacing:.02em">hilos</div>
               </div>
             </div>
           </div>
